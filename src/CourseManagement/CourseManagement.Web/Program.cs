@@ -11,7 +11,12 @@ Log.Logger = new LoggerConfiguration()
 
 try
 {
+    Log.Information("Application Starting...");
+
     var builder = WebApplication.CreateBuilder(args);
+    
+    var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+
 
     builder.Host.UseSerilog((context,LoggerConfig)=>
         LoggerConfig.MinimumLevel.Debug()
@@ -46,9 +51,9 @@ try
 }
 catch(Exception ex)
 {
-
+    Log.Fatal(ex, "Failed to start application.");
 }
 finally
 {
-
+    Log.CloseAndFlush();
 }
