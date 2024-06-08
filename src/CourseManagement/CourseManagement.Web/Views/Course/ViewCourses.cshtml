@@ -1,1 +1,61 @@
-﻿
+﻿<div class="w-100 card border-0 p-4">
+    <div class="card-header bg-success bg-gradient ml-0 py-3">
+        <div class="row">
+            <div class="col-12 text-center">
+                <h2 class="text-white py-2">Villa List</h2>
+            </div>
+        </div>
+    </div>
+    <div class="card-body border p-4">
+        <div class="row pb-3">
+            <div class="col-6 offset-6 text-end">
+                <a asp-controller="Villa" asp-action="Create" class="btn btn-secondary">
+                    <i class="bi bi-plus-circle"></i> Create Course
+                </a>
+            </div>
+
+        </div>
+        <div id="CoursesGrid" class="ag-theme-quartz" style="height: 500px"></div>
+
+    </div>
+</div>
+@* 
+@section Scripts
+{ *@
+<script type="text/javascript">
+        $(document).ready(function () {
+            debugger;
+            console.log("In Grid");
+            DefineGrid();
+
+        });
+        // $(function () {
+        //     debugger;
+        // });
+        function DefineGrid() {
+            console.log("In Grid");
+                let gridApi;
+                const gridOptions = {
+                    columnDefs :[
+                        { field: "Name", Name: "Course Name", minWidth: 170 },
+                        { field: "Description", Name: "Course Description", minWidth: 170 },
+
+
+                    ],
+                    defaultColDef: {
+                        filter: "agTextColumnFilter",
+                        floatingFilter: true,
+                    },
+                    rowSelection: "multiple",
+                    suppressRowClickSelection: true,
+                    pagination: true,
+                    paginationPageSize: 10,
+                    paginationPageSizeSelector: [10, 25, 50],
+                };
+                const gridDiv = document.querySelector("#CoursesGrid");
+                gridApi = agGrid.createGrid(gridDiv, gridOptions);
+        }
+    </script>
+
+    
+@* } *@

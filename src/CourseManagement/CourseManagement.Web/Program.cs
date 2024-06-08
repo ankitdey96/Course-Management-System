@@ -2,7 +2,7 @@ using Serilog;
 
 var Configuration = new ConfigurationBuilder()
     .SetBasePath(Directory.GetCurrentDirectory())
-    .AddJsonFile("appsetting.json").Build();
+    .AddJsonFile("appsettings.json").Build();
 
 Log.Logger = new LoggerConfiguration()
                   .ReadFrom
