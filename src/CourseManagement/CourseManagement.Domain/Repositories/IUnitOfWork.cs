@@ -8,6 +8,7 @@ namespace CourseManagement.Domain.Repositories
 {
     public interface IUnitOfWork:IAsyncDisposable,IDisposable
     {
+        public ICourseRepository CourseRepository { get; }
         Task SaveAsync();
     }
 }

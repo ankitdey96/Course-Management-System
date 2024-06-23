@@ -12,4 +12,10 @@
     <PackageReference Include="Serilog.Sinks.MSSqlServer" Version="6.6.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\CourseManagement.Application\CourseManagement.Application.csproj" />
+    <ProjectReference Include="..\CourseManagement.Domain\CourseManagement.Domain.csproj" />
+    <ProjectReference Include="..\CourseManagement.Infrastructure\CourseManagement.Infrastructure.csproj" />
+  </ItemGroup>
+
 </Project>

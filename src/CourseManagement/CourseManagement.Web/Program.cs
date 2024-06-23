@@ -1,3 +1,7 @@
+using CourseManagement.Application.Interfaces;
+using CourseManagement.Application.Services;
+using CourseManagement.Domain.Repositories;
+using CourseManagement.Infrastructure.Repository;
 using Serilog;
 
 var Configuration = new ConfigurationBuilder()
@@ -24,6 +28,8 @@ try
     );
     // Add services to the container.
     builder.Services.AddControllersWithViews();
+    builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+    builder.Services.AddScoped<ICourseManagementService, CourseManagementService>();
 
     var app = builder.Build();
 
