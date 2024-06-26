@@ -10,10 +10,9 @@ namespace CourseManagement.Infrastructure.DBContext
 {
     public class ApplicationDbContext : DbContext
     {
-        private readonly string _connectionstring;
-        public ApplicationDbContext(string connectionstring)
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext>options):base(options)
         {
-            _connectionstring = connectionstring;
+
         }
         public DbSet<Course>Course { get; set; }
     }

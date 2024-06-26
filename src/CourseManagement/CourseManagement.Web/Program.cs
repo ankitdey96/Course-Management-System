@@ -1,7 +1,9 @@
 using CourseManagement.Application.Interfaces;
 using CourseManagement.Application.Services;
 using CourseManagement.Domain.Repositories;
+using CourseManagement.Infrastructure.DBContext;
 using CourseManagement.Infrastructure.Repository;
+using Microsoft.EntityFrameworkCore;
 using Serilog;
 
 var Configuration = new ConfigurationBuilder()
@@ -27,6 +29,7 @@ try
         .ReadFrom.Configuration(context.Configuration)
     );
     // Add services to the container.
+    builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connectionString));
     builder.Services.AddControllersWithViews();
     builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
     builder.Services.AddScoped<ICourseManagementService, CourseManagementService>();
