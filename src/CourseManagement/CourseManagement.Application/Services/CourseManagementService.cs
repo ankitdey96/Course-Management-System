@@ -1,5 +1,6 @@
 ﻿using CourseManagement.Application.Interfaces;
 using CourseManagement.Domain.Entities;
+using CourseManagement.Domain.Exceptions;
 using CourseManagement.Domain.Repositories;
 
 namespace CourseManagement.Application.Services
@@ -15,6 +16,8 @@ namespace CourseManagement.Application.Services
         {
             bool IsDuplicateTitle =await _unitOfWork.CourseRepository.IsDuplicate(x => x.Name == Name);
 
+            if (IsDuplicateTitle)
+                throw new DuplicateTitleException();
             Course oCourse = new Course
             {
                 Name = Name,
