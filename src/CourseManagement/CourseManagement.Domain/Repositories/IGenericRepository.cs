@@ -14,6 +14,7 @@ namespace CourseManagement.Domain.Repositories
         Task<IList<TEntity>> GetAllAsync();
 
         Task<TEntity> GetByIdAsync(Tkey id);
+        Task<bool> IsDuplicate(Expression<Func<TEntity, bool>> filter = null);
 
         Task<IList<TEntity>> GetPaginateList(int pageNo = 1, int pageSize = 10,Expression<Func<TEntity, bool>> filter = null,Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,params Expression<Func<TEntity, object>>[] includes);
     }

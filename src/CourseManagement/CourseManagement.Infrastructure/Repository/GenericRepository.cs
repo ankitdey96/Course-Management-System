@@ -59,5 +59,22 @@ namespace CourseManagement.Infrastructure.Repository
                 _dbcontext.Entry(entity).State = EntityState.Modified;
             });
         }
+
+        public async Task<bool> IsDuplicate(Expression<Func<TEntity,bool>> filter = null)
+        {
+            IQueryable<TEntity> query = dbSet;
+            bool DuplicateExist = true;
+            if(filter is not null)
+            {
+                DuplicateExist = await query.CountAsync(filter) > 0;
+            }
+            else
+            {
+                DuplicateExist = await query.CountAsync() > 0;
+            }
+
+            return DuplicateExist;
+
+        }
     }
 }

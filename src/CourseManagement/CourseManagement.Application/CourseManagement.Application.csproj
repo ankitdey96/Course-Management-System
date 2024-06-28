@@ -10,4 +10,8 @@
     <Folder Include="DTOs\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\CourseManagement.Domain\CourseManagement.Domain.csproj" />
+  </ItemGroup>
+
 </Project>
