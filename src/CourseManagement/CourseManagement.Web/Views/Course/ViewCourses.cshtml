@@ -26,23 +26,20 @@
         $(document).ready(function () {
             debugger;
             DefineGrid();
+            GetCourses();
 
         });
-        // $(function () {
-        //     debugger;
-        // });
+    let gridApi;
+
         function DefineGrid() {
             console.log("In Grid");
-                let gridApi;
                 const gridOptions = {
                     columnDefs :[
-                        { field: "Name", HeaderName: "Course Name", minWidth: 170 },
-                        { field: "Description", HeaderName: "Course Description", minWidth: 170 },
-                        { field: "NoOfClasses", HeaderName: "No Of Classes", minWidth: 170 },
-                        { field: "NoOfClasses", HeaderName: "No Of Classes", minWidth: 170 },
-                        { field: "Fees", HeaderName: "Fees", minWidth: 170 },
-
-
+                        { field: "Name", headerName: "Course Name", minWidth: 170 },
+                        { field: "Description", headerName: "Course Description", minWidth: 170 },
+                        { field: "NoOfClasses", headerName: "No Of Classes", minWidth: 170 },
+                        { field: "NoOfClasses", headerName: "No Of Classes", minWidth: 170 },
+                        { field: "Fees", headerName: "Fees", minWidth: 170 }
                     ],
                     defaultColDef: {
                         filter: "agTextColumnFilter",
@@ -56,7 +53,35 @@
                 };
                 const gridDiv = document.querySelector("#CoursesGrid");
                 gridApi = agGrid.createGrid(gridDiv, gridOptions);
-                 gridOptions.gridApi.rowData([]);
+        }
+
+        function GetCourses(){
+            console.log(gridApi);
+            var oCourseVM = {
+                PageNo:gridApi.paginationGetCurrentPage()+1,
+                PageSize: gridApi.paginationGetPageSize()
+            };
+
+            $.ajax({
+                url: "/Course/GetCourses",
+                type: "POST",
+                contentType: "application/json", //must be added
+                dataType: "json", //better to add, not mandatory
+                // // beforeSend: function (xhr) {
+                // //     xhr.setRequestHeader("Authorization",
+                // //         "Bearer " + '/* HttpContextAccessor.HttpContext.Session.GetString("token") */');
+                // // },
+                data: JSON.stringify(oCourseVM),
+                success: function (data) {
+                    debugger;
+                    var oCourses = data;
+                    gridApi.setGridOption("rowData", oCourses);
+                },
+                error: function (xhr, status, error) {
+                    alert(error);
+                }
+
+            });
         }
     </script>
 

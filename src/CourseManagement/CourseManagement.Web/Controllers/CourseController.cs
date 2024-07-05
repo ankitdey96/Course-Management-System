@@ -20,10 +20,15 @@ namespace CourseManagement.Web.Controllers
 
         public IActionResult Create()
         {
-
             return View();
         }
-
+        [HttpPost]
+        public async Task<Actionresult> GetCourses([FromBody]CourseVM oCourseVM)
+        {
+            oCourseVM.Resolve(_scopeFactory);
+            var data = await oCourseVM.GetCourseWithPaginationAsync();
+            return Json(data);
+        }
         [HttpPost,ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CourseVM oCourseVM)
         {

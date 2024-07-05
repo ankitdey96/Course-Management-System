@@ -30,5 +30,14 @@ namespace CourseManagement.Application.Services
             await _unitOfWork.CourseRepository.AddAsync(oCourse);
             await _unitOfWork.SaveAsync();
         }
+
+       
+        public async Task<IList<Course>> GetPagedCourseAsync(int pageNo, int pageSize = 10, Func<IQueryable<Course>, IOrderedQueryable<Course>> orderBy = null)
+        {
+            if (orderBy is null)
+                orderBy = query => query.OrderBy(x => x.Name);
+
+            return await _unitOfWork.CourseRepository.GetPaginateList(pageNo, pageSize,null,null,orderBy);
+        }
     }
 }

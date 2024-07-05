@@ -3,6 +3,7 @@ using CourseManagement.Domain.Repositories;
 using CourseManagement.Infrastructure.DBContext;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
+using System.Linq.Dynamic.Core;
 
 namespace CourseManagement.Infrastructure.Repository
 {
@@ -46,9 +47,31 @@ namespace CourseManagement.Infrastructure.Repository
             return await dbSet.FindAsync(id);
         }
 
-        public Task<IList<TEntity>> GetPaginateList(int pageNo = 1, int pageSize = 10, Expression<Func<TEntity, bool>> filter = null, Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null, params Expression<Func<TEntity, object>>[] includes)
+        public async Task<IList<TEntity>> GetPaginateList(int pageNo = 1, int pageSize = 10,
+            Expression<Func<TEntity, bool>> filter = null,
+            Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> includes = null,
+             Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null)
         {
-            throw new NotImplementedException();
+            IQueryable<TEntity> query = dbSet;
+            if (filter is not null)
+                query = query.Where(filter);
+            
+
+            if(includes is not null)
+                query = includes(query);
+
+            IList<TEntity> data;
+
+            if (orderBy is not null)
+               query = orderBy(query);
+
+            var Result = query.Skip((pageNo-1) * pageSize).Take(pageSize);
+            data = await Result.AsNoTracking().ToListAsync();
+
+
+            return data;
+
+
         }
 
         public async Task UpdateAsync(TEntity entity)

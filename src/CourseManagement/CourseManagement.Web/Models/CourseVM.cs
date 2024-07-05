@@ -1,4 +1,5 @@
 ﻿using CourseManagement.Application.Interfaces;
+using CourseManagement.Domain.Entities;
 
 namespace CourseManagement.Web.Models
 {
@@ -12,6 +13,10 @@ namespace CourseManagement.Web.Models
         public Guid TeacherId { get; set; }
         public int NoOfClasses { get; set; }
         public decimal Fees { get; set; }
+
+        public int PageNo {  get; set; }
+
+        public int PageSize {  get; set; }
         public CourseVM() 
         {
 
@@ -33,7 +38,12 @@ namespace CourseManagement.Web.Models
            await _courseManagementService.CreateCourse(Name,Description,Guid.Empty,NoOfClasses,Fees);
         }
 
+        public async Task<IList<Course>> GetCourseWithPaginationAsync()
+        {
+            var data = await  _courseManagementService.GetPagedCourseAsync(PageNo,PageSize);
 
+            return data;
 
+        }
     }
 }
