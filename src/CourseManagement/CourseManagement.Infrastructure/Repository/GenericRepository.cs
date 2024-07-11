@@ -24,6 +24,12 @@ namespace CourseManagement.Infrastructure.Repository
             await dbSet.AddAsync(entity);
         }
 
+        public virtual async Task RemoveAsync(TKey id)
+        {
+            var entityToDelete = dbSet.Find(id);
+            await DeleteAsync(entityToDelete);
+        }
+
         public async Task DeleteAsync(TEntity entity)
         {
             await Task.Run(() =>

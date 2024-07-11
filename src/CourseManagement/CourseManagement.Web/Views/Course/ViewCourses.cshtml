@@ -35,24 +35,102 @@
             console.log("In Grid");
                 const gridOptions = {
                     columnDefs :[
+                        { valueGetter: x => { return (x.node.rowIndex + 1) }, headerName: "SL", width: 55 },
                         { field: "Name", headerName: "Course Name", minWidth: 170 },
                         { field: "Description", headerName: "Course Description", minWidth: 170 },
                         { field: "NoOfClasses", headerName: "No Of Classes", minWidth: 170 },
                         { field: "NoOfClasses", headerName: "No Of Classes", minWidth: 170 },
-                        { field: "Fees", headerName: "Fees", minWidth: 170 }
+                        { field: "Fees", headerName: "Fees", minWidth: 170 },
+                        { field: "actions",headerName: "Actions",cellRenderer: CustomButtonComponent }
                     ],
                     defaultColDef: {
                         filter: "agTextColumnFilter",
                     },
                     rowSelection: "multiple",
+                    //rowModelType: "infinite",
                     suppressRowClickSelection: true,
                     pagination: true,
-                    paginationPageSize: 10,
-                    paginationPageSizeSelector: [10, 25, 50],
-                    rowData:[]
+                    paginationPageSize: 20,
+                    paginationPageSizeSelector: [20,50,10],
+                    onPaginationChanged: PaginationChanged,
                 };
                 const gridDiv = document.querySelector("#CoursesGrid");
                 gridApi = agGrid.createGrid(gridDiv, gridOptions);
+        }
+
+        function CustomButtonComponent(params) {
+            const eDiv = document.createElement('div');
+            let eEDitButton = document.createElement('button');
+            let eEditIcon = document.createElement('i');
+            eEditIcon.className = 'fas fa-pencil-alt';
+
+            eEDitButton.className = 'btn btn-info btn-sm';
+            eEDitButton.appendChild(eEditIcon);
+            let editText = document.createTextNode(' Edit');
+            eEDitButton.onclick = function(){
+                EditCourse(params.data);
+            }
+            // Append the text node to the button
+            eEDitButton.appendChild(editText);
+
+            eDiv.appendChild(eEDitButton);
+
+            let eDeleteButton = document.createElement('button');
+            let eDeleteIcon = document.createElement('i');
+            eDeleteIcon.className = 'fas fa-trash';
+
+            eDeleteButton.className = 'btn btn-danger btn-sm show-bs-modal';
+            eDeleteButton.appendChild(eDeleteIcon);
+            let deleteText = document.createTextNode(' Delete');
+            eDeleteButton.onclick = function () {
+                DeleteCourse(params.data);
+            }
+            // Append the text node to the button
+            eDeleteButton.appendChild(deleteText);
+
+            eDiv.appendChild(eDeleteButton);
+
+            // eDiv.innerHTML = '<button type="submit" class="btn btn-info btn-sm">onclick="EditCourse()" <i class="fas fa-pencil-alt" > </i> Edit </button > <button type="submit" class="btn btn-danger btn-sm show-bs-modal" > <i class="fas fa-trash" > </i>Delete  </button > ';
+
+            
+            return eDiv;
+        }
+
+        function EditCourse(oCourse) {
+            debugger
+            window.location.href = '/Course/Update/'+oCourse.Id;
+        }
+
+        function DeleteCourse(oCourse){
+
+            $.ajax({
+            type: "POST",
+            dataType: "json",
+            url: "/Course/Delete/"+oCourse.Id,
+            success: function (data) {
+                debugger
+                oMessage = data;
+                console.log(oMessage);
+                if (oMessage == "Data Deleted Successfully") {
+                    gridApi.applyTransaction({ remove: [oCourse]});
+
+                }
+            },
+            error: function (xhr, status, error) {
+                alert(error);
+            }
+
+        });
+
+        }
+
+        function PaginationChanged(params) {
+            // alert("in change");
+            console.log(params,"params");
+            if (params.newPage) {
+                console.log('Page changed to: ' + (params.api.paginationGetCurrentPage() + 1));
+                GetCourses();
+            }
         }
 
         function GetCourses(){
@@ -75,7 +153,40 @@
                 success: function (data) {
                     debugger;
                     var oCourses = data;
-                    gridApi.setGridOption("rowData", oCourses);
+                    const dataSource = {
+                    rowCount: undefined, // behave as infinite scroll
+                        getRows: (params) => {
+                        const rowsThisPage = oCourses.slice(0, 6);
+                            console.log(params, "params ajax");
+                            params.successCallback(rowsThisPage, 11);
+
+                        // At this point in your code, you would call the server.
+                        // To make the demo look real, wait for 500ms before returning
+                        // setTimeout(() => {
+                        //     // take a slice of the total rows
+                        //     // const dataAfterSortingAndFiltering = sortAndFilter(
+                        //     //     data,
+                        //     //     params.sortModel,
+                        //     //     params.filterModel,
+                        //     // );
+                        //     // const rowsThisPage = dataAfterSortingAndFiltering.slice(
+                        //     //     params.startRow,
+                        //     //     params.endRow,
+                        //     // );
+                        //     // // if on or after the last page, work out the last row.
+                        //     // let lastRow = -1;
+                        //     // if (dataAfterSortingAndFiltering.length <= params.endRow) {
+                        //     //     lastRow = dataAfterSortingAndFiltering.length;
+                        //     // }
+                        //     // call the success callback
+                        // }, 500);
+                    },
+                    };
+                    // // gridApi.paginationGoToPage(2);
+                    //gridApi.setGridOption("datasource", dataSource);
+                     gridApi.setGridOption("rowData", oCourses);
+
+
                 },
                 error: function (xhr, status, error) {
                     alert(error);

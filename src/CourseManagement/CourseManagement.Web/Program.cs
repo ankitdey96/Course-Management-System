@@ -3,6 +3,7 @@ using CourseManagement.Application.Services;
 using CourseManagement.Domain.Repositories;
 using CourseManagement.Infrastructure.DBContext;
 using CourseManagement.Infrastructure.Repository;
+using CourseManagement.Web.Models;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 
@@ -33,7 +34,7 @@ try
     builder.Services.AddControllersWithViews();
     builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
     builder.Services.AddScoped<ICourseManagementService, CourseManagementService>();
-
+    builder.Services.AddScoped<CourseVM, CourseVM>();
     var app = builder.Build();
 
     // Configure the HTTP request pipeline.

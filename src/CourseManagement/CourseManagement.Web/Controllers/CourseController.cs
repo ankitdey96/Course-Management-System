@@ -1,6 +1,8 @@
-﻿using CourseManagement.Domain.Exceptions;
+﻿using CourseManagement.Application.Interfaces;
+using CourseManagement.Domain.Exceptions;
 using CourseManagement.Web.Models;
 using Microsoft.AspNetCore.Mvc;
+using System.Text.Json;
 
 namespace CourseManagement.Web.Controllers
 {
@@ -22,12 +24,67 @@ namespace CourseManagement.Web.Controllers
         {
             return View();
         }
+
+        public async Task<IActionResult> Update(Guid Id)
+        {
+            var oCourseVM = _scopeFactory.CreateScope().ServiceProvider.GetRequiredService<CourseVM>();
+            var model = await oCourseVM.GetCoure(Id);
+            return View(model);
+        }
+
         [HttpPost]
-        public async Task<Actionresult> GetCourses([FromBody]CourseVM oCourseVM)
+        public async Task<IActionResult> Update(CourseVM oCourseVM)
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    oCourseVM.Resolve(_scopeFactory);
+                    await oCourseVM.UpdateAsync();
+                    TempData["success"] = "Data Updated Successfully";
+
+                    return RedirectToAction("ViewCourses");
+                }
+                catch(DuplicateTitleException de)
+                {
+                    TempData["error"] = de.Message;
+                }
+                catch(Exception ex)
+                {
+                    TempData["error"] = "There was a Problem in Updating Course";
+                    _logger.LogError(ex.Message);
+                }
+
+
+            }
+
+            return View(oCourseVM);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Delete(Guid Id)
+        {
+            var oCourseVM = _scopeFactory.CreateScope().ServiceProvider.GetRequiredService<CourseVM>();
+            try
+            {
+                await oCourseVM.DeleteAsync(Id);
+                TempData["success"] = "Data Deleted Successfully";
+                return Json("Data Deleted Successfully");
+            }
+            catch(Exception ex)
+            {
+                TempData["error"] = "There was a Problem in Deleteing Course";
+                _logger.LogError(ex.Message);
+            }
+            return Json("There was a Problem in Deleteing Course");
+
+        }
+        [HttpPost]
+        public async Task<JsonResult> GetCourses([FromBody]CourseVM oCourseVM)
         {
             oCourseVM.Resolve(_scopeFactory);
             var data = await oCourseVM.GetCourseWithPaginationAsync();
-            return Json(data);
+            return Json(data, new JsonSerializerOptions { PropertyNamingPolicy=null});
         }
         [HttpPost,ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CourseVM oCourseVM)
@@ -37,7 +94,7 @@ namespace CourseManagement.Web.Controllers
                 try
                 {
                     oCourseVM.Resolve(_scopeFactory);
-                    await oCourseVM.CreateCourseAsync();
+                    await oCourseVM.CreateAsync();
                     TempData["success"] = "Data Saved Successfully";
 
                     return RedirectToAction("ViewCourses");
