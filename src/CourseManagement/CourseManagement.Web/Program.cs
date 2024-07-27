@@ -2,9 +2,12 @@ using CourseManagement.Application.Interfaces;
 using CourseManagement.Application.Services;
 using CourseManagement.Domain.Repositories;
 using CourseManagement.Infrastructure.DBContext;
+using CourseManagement.Infrastructure.Membership;
 using CourseManagement.Infrastructure.Repository;
 using CourseManagement.Web.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 
 var Configuration = new ConfigurationBuilder()
@@ -31,6 +34,8 @@ try
     );
     // Add services to the container.
     builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connectionString));
+    builder.Services.AddIdentity<ApplicationUser,IdentityRole>()
+        .AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultTokenProviders();
     builder.Services.AddControllersWithViews();
     builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
     builder.Services.AddScoped<ICourseManagementService, CourseManagementService>();

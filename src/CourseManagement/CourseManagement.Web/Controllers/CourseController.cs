@@ -22,7 +22,8 @@ namespace CourseManagement.Web.Controllers
 
         public IActionResult Create()
         {
-            return View();
+            var oCourseVM = _scopeFactory.CreateScope().ServiceProvider.GetRequiredService<CourseVM>();
+            return View(oCourseVM);
         }
 
         public async Task<IActionResult> Update(Guid Id)
