@@ -21,7 +21,8 @@ namespace CourseManagement.Web.Models
         public bool RememberMe { get; set; }
 
         public string? ReturnUrl { get; set; }
-        private readonly SignInManager<ApplicationUser> _signInManager;
+        private SignInManager<ApplicationUser> _signInManager;
+        private IServiceScopeFactory ServiceScopeFactory { get; set; }
 
         public LogInVM()
         {
@@ -33,6 +34,28 @@ namespace CourseManagement.Web.Models
             _signInManager = signInManager;
         }
 
+        public void Resolve(IServiceScopeFactory serviceScopeFactory)
+        {
+            ServiceScopeFactory = serviceScopeFactory;
+            _signInManager = ServiceScopeFactory.CreateScope().ServiceProvider.GetRequiredService<SignInManager<ApplicationUser>>();
+        }
 
+        public async Task<(string ?ErrorMessage,string ?RedirectUrl)>LogIn()
+        {
+            var oUser = await _signInManager.PasswordSignInAsync(Email, Password, RememberMe, false);
+            if (oUser.Succeeded)
+            {
+                return (null, ReturnUrl);
+            }
+            else
+            {
+                return ("Invalid Login Attempt", null);
+            }
+        }
+
+        public async Task LogOut()
+        {
+            await _signInManager.SignOutAsync();
+        }
     }
 }

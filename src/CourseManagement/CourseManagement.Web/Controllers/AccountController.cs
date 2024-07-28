@@ -50,5 +50,41 @@ namespace CourseManagement.Web.Controllers
             var oLoginVM = Activator.CreateInstance<LogInVM>();
             return View(oLoginVM);
         }
+        [HttpPost,ValidateAntiForgeryToken]
+        public async Task<IActionResult> Login(LogInVM oLogInVM)
+        {
+            if (ModelState.IsValid)
+            {
+                oLogInVM.Resolve(_scopeFactory);
+                var oUser  = await oLogInVM.LogIn();
+                if(oUser.ErrorMessage is not null)
+                {
+                    ModelState.AddModelError(string.Empty,oUser.ErrorMessage);
+                }
+                else
+                {
+                    return Redirect(oUser.RedirectUrl);
+                }
+            }
+
+            return View(oLogInVM);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> LogOut(string returnUrl = null)
+        {
+            LogInVM oLogInVM = Activator.CreateInstance<LogInVM>();
+            oLogInVM.Resolve(_scopeFactory);
+            await oLogInVM.LogOut();
+
+            if(returnUrl is not null)
+            {
+                return Redirect(returnUrl);
+            }
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
+        }
     }
 }
