@@ -68,6 +68,7 @@ namespace CourseManagement.Web.Models
             var oResult = await _userManager.CreateAsync(oUser, Password);
             if (oResult.Succeeded)
             {
+                await _userManager.AddToRoleAsync(oUser,"Student");
                 await _signInManager.SignInAsync(oUser, false);
                 return (null, RedirectLocation);
             }

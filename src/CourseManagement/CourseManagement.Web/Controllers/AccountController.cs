@@ -20,6 +20,15 @@ namespace CourseManagement.Web.Controllers
             var oRegisterVM =Activator.CreateInstance<RegisterVM>();
             return View(oRegisterVM);
         }
+
+        public async Task<IActionResult> AssignRole()
+        {
+            AccountVM oAccountVM = Activator.CreateInstance<AccountVM>();
+            oAccountVM.Resolve(_scopeFactory);
+            var oUsers = await oAccountVM.GetAllUsers();
+
+            return View(oUsers);
+        }
         [HttpPost,ValidateAntiForgeryToken]
         public async Task<IActionResult>Register(RegisterVM oRegisterVM)
         {

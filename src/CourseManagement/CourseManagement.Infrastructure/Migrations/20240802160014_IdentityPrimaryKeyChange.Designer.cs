@@ -4,6 +4,7 @@ using CourseManagement.Infrastructure.DBContext;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CourseManagement.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240802160014_IdentityPrimaryKeyChange")]
+    partial class IdentityPrimaryKeyChange
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -76,23 +79,6 @@ namespace CourseManagement.Infrastructure.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("64347f96-85a1-4326-95f9-8291f9b64611"),
-                            Name = "Admin"
-                        },
-                        new
-                        {
-                            Id = new Guid("c77748f7-eb8b-4e0d-aff9-0f1beced819e"),
-                            Name = "Student"
-                        },
-                        new
-                        {
-                            Id = new Guid("4fa02999-630a-4cc7-8ee4-281dee335536"),
-                            Name = "Teacher"
-                        });
                 });
 
             modelBuilder.Entity("CourseManagement.Infrastructure.Membership.ApplicationUser", b =>
@@ -170,23 +156,6 @@ namespace CourseManagement.Infrastructure.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("abc5d607-8ccc-46ef-b56c-c0e8fff6cc8e"),
-                            AccessFailedCount = 0,
-                            ConcurrencyStamp = "022b5807-2310-494f-93cc-f67ba6cad2c2",
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "admin@gmail.com",
-                            EmailConfirmed = false,
-                            FirstName = "Admin",
-                            LastName = "",
-                            LockoutEnabled = false,
-                            PasswordHash = "AQAAAAIAAYagAAAAEPwkCLdOqMx3lLCQhaZ3z27YG8N4R2DRaXCEJB3yrnzOiLgWqCPWZoOweTbhrcJFCA==",
-                            PhoneNumberConfirmed = false,
-                            TwoFactorEnabled = false
-                        });
                 });
 
             modelBuilder.Entity("CourseManagement.Infrastructure.Membership.ApplicationUserRole", b =>
@@ -202,13 +171,6 @@ namespace CourseManagement.Infrastructure.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("AspNetUserRoles", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            UserId = new Guid("abc5d607-8ccc-46ef-b56c-c0e8fff6cc8e"),
-                            RoleId = new Guid("64347f96-85a1-4326-95f9-8291f9b64611")
-                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
