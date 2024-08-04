@@ -1,6 +1,8 @@
 ﻿using Azure;
 using CourseManagement.Web.Models;
 using Microsoft.AspNetCore.Mvc;
+using static System.Runtime.InteropServices.JavaScript.JSType;
+using System.Text.Json;
 
 namespace CourseManagement.Web.Controllers
 {
@@ -25,9 +27,19 @@ namespace CourseManagement.Web.Controllers
         {
             AccountVM oAccountVM = Activator.CreateInstance<AccountVM>();
             oAccountVM.Resolve(_scopeFactory);
+            oAccountVM.RolesList = await oAccountVM.GetAllRoles();
+
+            return View(oAccountVM);
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> GetAllUsers()
+        {
+            AccountVM oAccountVM = Activator.CreateInstance<AccountVM>();
+            oAccountVM.Resolve(_scopeFactory);
             var oUsers = await oAccountVM.GetAllUsers();
 
-            return View(oUsers);
+            return Json(oUsers, new JsonSerializerOptions { PropertyNamingPolicy = null });
         }
         [HttpPost,ValidateAntiForgeryToken]
         public async Task<IActionResult>Register(RegisterVM oRegisterVM)

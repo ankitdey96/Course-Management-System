@@ -159,27 +159,6 @@
                         const rowsThisPage = oCourses.slice(0, 6);
                             console.log(params, "params ajax");
                             params.successCallback(rowsThisPage, 11);
-
-                        // At this point in your code, you would call the server.
-                        // To make the demo look real, wait for 500ms before returning
-                        // setTimeout(() => {
-                        //     // take a slice of the total rows
-                        //     // const dataAfterSortingAndFiltering = sortAndFilter(
-                        //     //     data,
-                        //     //     params.sortModel,
-                        //     //     params.filterModel,
-                        //     // );
-                        //     // const rowsThisPage = dataAfterSortingAndFiltering.slice(
-                        //     //     params.startRow,
-                        //     //     params.endRow,
-                        //     // );
-                        //     // // if on or after the last page, work out the last row.
-                        //     // let lastRow = -1;
-                        //     // if (dataAfterSortingAndFiltering.length <= params.endRow) {
-                        //     //     lastRow = dataAfterSortingAndFiltering.length;
-                        //     // }
-                        //     // call the success callback
-                        // }, 500);
                     },
                     };
                     // // gridApi.paginationGoToPage(2);
