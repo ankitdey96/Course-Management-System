@@ -1,27 +1,30 @@
 ﻿using CourseManagement.Application.Interfaces;
+using CourseManagement.Domain.Exceptions;
 using CourseManagement.Infrastructure.Membership;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using NuGet.Packaging;
 
 namespace CourseManagement.Web.Models
 {
     public class AccountVM
     {
-        public string UserName {  get; set; }
-        public string FirstName {  get; set; }
-        public string LastName { get; set; }
+        public Guid ?UserID {  get; set; }
+        public string ?UserName {  get; set; }
+        public string ?FirstName {  get; set; }
+        public string ?LastName { get; set; }
 
-        public string Email { get; set; }  
+        public string ?Email { get; set; }  
 
-        public string Role {  get; set; }
+        public string ?Role {  get; set; }
 
-        public Guid RoleId {  get; set; }
+        public Guid ?RoleId {  get; set; }
         private UserManager<ApplicationUser> _userManager;
 
         private RoleManager<ApplicationRole> _roleManager;
 
-        public List<SelectListItem> RolesList { get; set; }
+        public List<SelectListItem> ?RolesList { get; set; }
         private IServiceScopeFactory ServiceScope { get; set; }
 
         public AccountVM()
@@ -46,7 +49,8 @@ namespace CourseManagement.Web.Models
         public async Task<IList<AccountVM>> GetAllUsers()
         {
             List<AccountVM> oAccountVMs = new List<AccountVM>();
-            var oUsers =await _userManager.GetUsersInRoleAsync("Student");
+            IList<ApplicationUser> oUsers = await _userManager.GetUsersInRoleAsync("Student");
+            oUsers.AddRange(await _userManager.GetUsersInRoleAsync("Teacher"));
 
             foreach(var ouser in oUsers)
             {
@@ -61,6 +65,7 @@ namespace CourseManagement.Web.Models
                         Role = oRole.Result.Name,
                         RoleId = oRole.Result.Id,
                         Email = ouser.Email,
+                        UserID = ouser.Id
                     });
                 }
             }
@@ -78,6 +83,36 @@ namespace CourseManagement.Web.Models
             }).ToList();
 
             return oRoleList;
+        }
+
+        public async Task<IEnumerable<IdentityError>> EditRole()
+        {
+            var oUser = await _userManager.FindByNameAsync(UserName);
+            if(oUser is null)
+            {
+                throw new NotFoundException("User");
+            }
+
+            if(!await _roleManager.RoleExistsAsync(Role))
+            {
+                throw new NotFoundException("Role");
+            }
+            var oCurrentRole = await _userManager.GetRolesAsync(oUser);
+            foreach(var oRole in oCurrentRole)
+            {
+                var oResult = await _userManager.RemoveFromRoleAsync(oUser, oRole);
+                if (!oResult.Succeeded)
+                {
+                    return oResult.Errors;
+                }
+            }
+
+            var oNewRole = await _userManager.AddToRoleAsync(oUser, Role);
+            if (!oNewRole.Succeeded)
+            {
+                return oNewRole.Errors;
+            }
+            return [];
         }
     }
 }

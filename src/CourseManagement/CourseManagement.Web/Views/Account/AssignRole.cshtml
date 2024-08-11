@@ -13,28 +13,30 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLongTitle">Edit Role</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="closeIcon">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
+
                         <div class="form-floating mb-3">
                             <input class="form-control" asp-for="UserName" autocomplete="username" aria-required="true" placeholder="User Name" id="txtUserName" disabled/>
-                            <label >User Name</label>
+                            <label>User Name</label>
                         </div>
 
                         <div class="form-floating mb-3">
-                            <label>Role</label>
                             <select id="cboRolesList" asp-items="@Model.RolesList"
                                     class="form-select border shadow">
                                 <option selected>--Select Role--</option>
                             </select>
+                        <label>Role</label>
+
                         </div>
                   
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal" id="modalClose">Close</button>
-                    <button type="button" class="btn btn-primary">Save changes</button>
+                    <button type="button" class="btn btn-primary" id="SaveRole">Save changes</button>
                 </div>
             </div>
         </div>
@@ -61,6 +63,7 @@
                 { field: "FirstName", headerName: "First Name", minWidth: 170 },
                 { field: "LastName", headerName: "Last Name", minWidth: 170 },
                 { field: "Email", headerName: "Email", minWidth: 170 },
+                { field: "Role", headerName: "Role", minWidth: 170 },
                 { field: "actions", headerName: "Actions", cellRenderer: CustomButtonComponent }
             ],
             defaultColDef: {
@@ -124,27 +127,54 @@
             failure: function (response) {
 
                 // $('.spinner').hide();
-                // alert(response.responseText);
+                alert(response.responseText);
             },
             error: function (response) {
-                console.log(response);
                 // $('.spinner').hide();
-                // alert(response.responseText);
+                 alert(response.responseText);
             }
         });
     }
     function EditRole(oUser){
-        debugger
-        $("txtUserName").val(oUser.UserName);
-        $("cboRolesList").val(oUser.RoleId);
+        $("#txtUserName").val(oUser.UserName);
+        $("#cboRolesList").val(oUser.RoleId);
 
         $('#exampleModalCenter').modal('show');
 
     }
 
-    $("#modalClose").click(function () {
+    $("#modalClose,#closeIcon").click(function () {
         $('#exampleModalCenter').modal('hide');
 
     });
+
+    $("#SaveRole").click(function () {
+        var oRole = {
+            Role: $("#cboRolesList option:selected").text(),
+            RoleID: $("#cboRolesList").val(),
+            UserName: $("#txtUserName").val()
+        };
+        $.ajax({
+            type: "POST",
+            data: oRole,
+            url: "@Url.Action("EditRole", "Account")",
+            success: function (data) {
+                gridApi.setGridOption("rowData", data);
+
+            },
+            failure: function (response) {
+
+                // $('.spinner').hide();
+                alert(response.responseText);
+            },
+            error: function (response) {
+                console.log(response);
+                // $('.spinner').hide();
+                alert(response.responseText);
+            }
+        });
+
+    });
+    
 </script>
 

@@ -3,6 +3,8 @@ using CourseManagement.Web.Models;
 using Microsoft.AspNetCore.Mvc;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using System.Text.Json;
+using Microsoft.AspNetCore.Components.Routing;
+using CourseManagement.Domain.Exceptions;
 
 namespace CourseManagement.Web.Controllers
 {
@@ -82,9 +84,13 @@ namespace CourseManagement.Web.Controllers
                 {
                     ModelState.AddModelError(string.Empty,oUser.ErrorMessage);
                 }
+                if(oUser.RoleName == "Admin")
+                {
+                    return RedirectToAction("Index", "Dashboard");
+                }
                 else
                 {
-                    return Redirect(oUser.RedirectUrl);
+                    return RedirectToAction("Index","Home");
                 }
             }
 
@@ -106,6 +112,38 @@ namespace CourseManagement.Web.Controllers
             {
                 return RedirectToAction("Index", "Home");
             }
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> EditRole(AccountVM oAccountVM)
+        {
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    oAccountVM.Resolve(_scopeFactory);
+                    var oRole = await oAccountVM.EditRole();
+                    if (oRole.Count() > 0)
+                    {
+                        foreach (var error in oRole)
+                        {
+                            ModelState.AddModelError(string.Empty, error.Description);
+                        }
+                    }
+                    TempData["success"] = "Role Updated Successfully";
+                }
+                catch(NotFoundException ex)
+                {
+                    TempData["error"] = ex.Message;
+                }
+                catch (Exception ex)
+                {
+                    TempData["error"] = ex.Message;
+                }
+            }
+
+            return Json(oAccountVM, new JsonSerializerOptions { PropertyNamingPolicy = null });
         }
     }
 }

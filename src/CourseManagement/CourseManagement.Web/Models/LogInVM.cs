@@ -1,5 +1,6 @@
 ﻿using CourseManagement.Infrastructure.Membership;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.CodeAnalysis.Elfie.Model.Strings;
 using System.ComponentModel.DataAnnotations;
 
 namespace CourseManagement.Web.Models
@@ -22,6 +23,7 @@ namespace CourseManagement.Web.Models
 
         public string? ReturnUrl { get; set; }
         private SignInManager<ApplicationUser> _signInManager;
+        private UserManager<ApplicationUser> _userManager;
         private IServiceScopeFactory ServiceScopeFactory { get; set; }
 
         public LogInVM()
@@ -29,29 +31,51 @@ namespace CourseManagement.Web.Models
 
         }
 
-        public LogInVM(SignInManager<ApplicationUser> signInManager)
+        public LogInVM(SignInManager<ApplicationUser> signInManager,UserManager<ApplicationUser>userManager)
         {
             _signInManager = signInManager;
+            _userManager = userManager;
         }
 
         public void Resolve(IServiceScopeFactory serviceScopeFactory)
         {
             ServiceScopeFactory = serviceScopeFactory;
             _signInManager = ServiceScopeFactory.CreateScope().ServiceProvider.GetRequiredService<SignInManager<ApplicationUser>>();
+            _userManager = ServiceScopeFactory.CreateScope().ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+
         }
 
-        public async Task<(string ?ErrorMessage,string ?RedirectUrl)>LogIn()
+        public async Task<(string ?ErrorMessage,string ?RoleName)>LogIn()
         {
-            var oUser = await _signInManager.PasswordSignInAsync(Email, Password, RememberMe, false);
-            if (oUser.Succeeded)
+
+            var oResult = await _signInManager.PasswordSignInAsync(Email, Password, RememberMe, false);
+            if (oResult.Succeeded)
             {
-                return (null, ReturnUrl);
+                return (null, await GetRole(Email));
             }
             else
             {
                 return ("Invalid Login Attempt", null);
             }
         }
+
+        public async Task<string> GetRole(string Email)
+        {
+            var oUser = await _userManager.FindByEmailAsync(Email);
+            if (await _userManager.IsInRoleAsync(oUser, "Admin"))
+            {
+                return "Admin";
+            }
+            if(await _userManager.IsInRoleAsync(oUser, "Teacher"))
+            {
+                return "Teacher";
+            }
+            else
+            {
+                return "Student";
+            }
+        }
+
 
         public async Task LogOut()
         {
