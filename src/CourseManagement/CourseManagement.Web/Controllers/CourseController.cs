@@ -1,11 +1,13 @@
 ﻿using CourseManagement.Application.Interfaces;
 using CourseManagement.Domain.Exceptions;
 using CourseManagement.Web.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
 
 namespace CourseManagement.Web.Controllers
 {
+    [Authorize(Roles ="Admin")]
     public class CourseController : Controller
     {
         private readonly IServiceScopeFactory _scopeFactory;

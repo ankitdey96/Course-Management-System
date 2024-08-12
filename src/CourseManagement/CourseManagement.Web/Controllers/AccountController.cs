@@ -5,6 +5,7 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 using System.Text.Json;
 using Microsoft.AspNetCore.Components.Routing;
 using CourseManagement.Domain.Exceptions;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CourseManagement.Web.Controllers
 {
