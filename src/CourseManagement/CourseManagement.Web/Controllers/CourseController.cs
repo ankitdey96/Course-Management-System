@@ -22,9 +22,13 @@ namespace CourseManagement.Web.Controllers
             return View();
         }
 
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
             var oCourseVM = _scopeFactory.CreateScope().ServiceProvider.GetRequiredService<CourseVM>();
+            oCourseVM.Resolve(_scopeFactory);
+            var oAccountVM = Activator.CreateInstance<AccountVM>();
+            oAccountVM.Resolve(_scopeFactory);
+            oCourseVM.TeacherList = await oAccountVM.GetTeacherList();
             return View(oCourseVM);
         }
 
@@ -32,6 +36,10 @@ namespace CourseManagement.Web.Controllers
         {
             var oCourseVM = _scopeFactory.CreateScope().ServiceProvider.GetRequiredService<CourseVM>();
             var model = await oCourseVM.GetCoure(Id);
+            var oAccountVM = Activator.CreateInstance<AccountVM>();
+            oAccountVM.Resolve(_scopeFactory);
+            model.TeacherList = await oAccountVM.GetTeacherList();
+
             return View(model);
         }
 

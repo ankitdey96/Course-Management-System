@@ -4,6 +4,7 @@ using CourseManagement.Infrastructure.DBContext;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CourseManagement.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240815185056_AddedTeacherIDInCourse")]
+    partial class AddedTeacherIDInCourse
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -34,10 +37,6 @@ namespace CourseManagement.Infrastructure.Migrations
 
                     b.Property<decimal>("Fees")
                         .HasColumnType("decimal(18,2)");
-
-                    b.Property<byte[]>("Image")
-                        .IsRequired()
-                        .HasColumnType("varbinary(max)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -213,14 +212,14 @@ namespace CourseManagement.Infrastructure.Migrations
                         {
                             Id = new Guid("abc5d607-8ccc-46ef-b56c-c0e8fff6cc8e"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "d5f088c3-4d38-4c27-9f41-f54102e602b0",
+                            ConcurrencyStamp = "e81d723d-3795-4679-a490-695cd1a3f981",
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "admin@gmail.com",
                             EmailConfirmed = false,
                             FirstName = "Admin",
                             LastName = "",
                             LockoutEnabled = false,
-                            PasswordHash = "AQAAAAIAAYagAAAAEMsEZUNgUC+C8vD6rgoJSLZnZOAPIVD9dRsSLgLgcuFIgNBFYzsttYsn9MAzgq54Wg==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEAJgdlVe64a3mFM9M5eA61qvKepHWScW+05FT9aAJ/NxigvjpFHnUvuSnJDxI+UIdg==",
                             PhoneNumberConfirmed = false,
                             TwoFactorEnabled = false
                         });

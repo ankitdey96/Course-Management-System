@@ -3,6 +3,7 @@ using CourseManagement.Application.Services;
 using CourseManagement.Infrastructure.Membership;
 using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations;
+using System.Linq.Dynamic.Core;
 
 namespace CourseManagement.Web.Models
 {
@@ -11,6 +12,7 @@ namespace CourseManagement.Web.Models
         private IServiceScopeFactory ServiceScope { get; set; }
         private UserManager<ApplicationUser> _userManager;
         private SignInManager<ApplicationUser> _signInManager;
+        private IUserService _userService {  get; set; }
         [Required]
         [EmailAddress]
         [Display(Name = "Email")]
@@ -40,10 +42,11 @@ namespace CourseManagement.Web.Models
 
         }
 
-        public RegisterVM(SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager)
+        public RegisterVM(SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager, IUserService userService)
         {
             _signInManager = signInManager;
             _userManager = userManager;
+            _userService = userService;
         }
 
         public void Resolve(IServiceScopeFactory serviceScopeFactory)
@@ -51,11 +54,10 @@ namespace CourseManagement.Web.Models
             ServiceScope = serviceScopeFactory;
             _signInManager = ServiceScope.CreateScope().ServiceProvider.GetRequiredService<SignInManager<ApplicationUser>>();
             _userManager = ServiceScope.CreateScope().ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+            _userService = ServiceScope.CreateScope().ServiceProvider.GetRequiredService<IUserService>();
         }
 
         
-       
-
         public async Task<(IEnumerable<IdentityError>?errors,string ?RedirectLocation)> Registration(string RedirectLocation)
         {
             var oUser = new ApplicationUser
@@ -68,6 +70,11 @@ namespace CourseManagement.Web.Models
             var oResult = await _userManager.CreateAsync(oUser, Password);
             if (oResult.Succeeded)
             {
+                var oNewUser = _userManager.Users.Where(x => x.Email == Email).FirstOrDefault();
+                if(oNewUser is not null)
+                {
+                    await _userService.CreateUser(oNewUser.UserName, oNewUser.PasswordHash, oNewUser.FirstName, oNewUser.LastName, oNewUser.Email, oNewUser.Id);
+                }
                 await _userManager.AddToRoleAsync(oUser,"Student");
                 await _signInManager.SignInAsync(oUser, false);
                 return (null, RedirectLocation);

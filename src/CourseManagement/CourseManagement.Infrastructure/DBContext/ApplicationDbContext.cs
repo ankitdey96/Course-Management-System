@@ -28,8 +28,8 @@ namespace CourseManagement.Infrastructure.DBContext
                 new ApplicationRole[]
                 {
                     new ApplicationRole{Name="Admin", Id=new Guid("64347f96-85a1-4326-95f9-8291f9b64611")},
-                    new ApplicationRole{Name="Student", Id=Guid.NewGuid()},
-                    new ApplicationRole{Name="Teacher", Id=Guid.NewGuid()},
+                    new ApplicationRole{Name="Student", Id=new Guid("ECC7FB6D-145A-4D16-983C-052ADAB45764")},
+                    new ApplicationRole{Name="Teacher", Id=new Guid("CCCEDBAB-FB08-44A4-B01C-DC2ACB893B79")},
                 }
             );
             builder.Entity<ApplicationUserRole>().HasData(
@@ -39,6 +39,8 @@ namespace CourseManagement.Infrastructure.DBContext
                         RoleId = new Guid("64347f96-85a1-4326-95f9-8291f9b64611")
                     }
             );
+
+            builder.Entity<Course>().HasOne(x => x.Teacher).WithMany(x => x.Courses).HasForeignKey(x => x.TeacherId).OnDelete(DeleteBehavior.NoAction);
 
         }
 
@@ -59,5 +61,7 @@ namespace CourseManagement.Infrastructure.DBContext
 
         }
         public DbSet<Course>Course { get; set; }
+        public DbSet<User> User { get; set; }
+
     }
 }

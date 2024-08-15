@@ -114,5 +114,17 @@ namespace CourseManagement.Web.Models
             }
             return [];
         }
+
+        public async Task<List<SelectListItem>?> GetTeacherList()
+        {
+            var oRoles = await _userManager.GetUsersInRoleAsync("Teacher");
+            var oRoleList = oRoles.Select(s => new SelectListItem
+            {
+                Value = s.Id.ToString(),
+                Text = s.FirstName + " " + s.LastName,
+            }).ToList();
+
+            return oRoleList;
+        }
     }
 }

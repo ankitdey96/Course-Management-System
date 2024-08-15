@@ -12,11 +12,13 @@ namespace CourseManagement.Infrastructure.Repository
     {
         private readonly ApplicationDbContext _dbContext;
         public ICourseRepository CourseRepository { get; private set; }
+        public IUserRepository UserRepository { get; private set; }
 
         public UnitOfWork(ApplicationDbContext dbContext)
         {
             _dbContext = dbContext;
             CourseRepository = new CourseRepository(dbContext);
+            UserRepository = new UserRepository(dbContext);
         }
 
 

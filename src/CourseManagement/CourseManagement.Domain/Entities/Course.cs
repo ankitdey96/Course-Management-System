@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.AspNetCore.Http;
 
 namespace CourseManagement.Domain.Entities
 {
@@ -14,5 +11,11 @@ namespace CourseManagement.Domain.Entities
         public Guid TeacherId { get; set; }
         public int NoOfClasses {  get; set; }
         public decimal Fees {  get; set; }
+        public User Teacher {  get; set; }
+        public byte[] Image { get; set; }  
+
+        [NotMapped] 
+        public IFormFile ImageFile { get; set; }  
+
     }
 }

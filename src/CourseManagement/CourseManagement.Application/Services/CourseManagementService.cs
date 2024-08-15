@@ -13,7 +13,7 @@ namespace CourseManagement.Application.Services
         {
             _unitOfWork = unitOfWork;
         }
-        public async Task CreateCourse(string Name, string Description, Guid TeacherID, int NoOfClasses, decimal Fees)
+        public async Task CreateCourse(string Name, string Description, Guid TeacherID, int NoOfClasses, decimal Fees, byte[] Image)
         {
             bool IsDuplicateTitle =await _unitOfWork.CourseRepository.IsDuplicate(x => x.Name == Name);
 
@@ -25,7 +25,8 @@ namespace CourseManagement.Application.Services
                 Description = Description,
                 TeacherId = TeacherID,
                 NoOfClasses = NoOfClasses,
-                Fees = Fees
+                Fees = Fees, 
+                Image = Image
             };
 
             await _unitOfWork.CourseRepository.AddAsync(oCourse);
@@ -51,7 +52,7 @@ namespace CourseManagement.Application.Services
             return await _unitOfWork.CourseRepository.GetPaginateList(pageNo, pageSize,null,null,orderBy);
         }
 
-        public async Task UpdateCourseAsync(Guid id, string name, string description, int noOfClasses, decimal fees)
+        public async Task UpdateCourseAsync(Guid id, string name, string description, int noOfClasses, decimal fees, Guid TeacherID, byte[] Image)
         {
             bool IsDuplicateTitle = await _unitOfWork.CourseRepository.IsDuplicate(x => x.Name == name && x.Id != id);
 
@@ -64,6 +65,8 @@ namespace CourseManagement.Application.Services
                 oCourse.Description = description;
                 oCourse.Fees = fees;
                 oCourse.NoOfClasses = noOfClasses;
+                oCourse.TeacherId = TeacherID;
+                oCourse.Image = Image;
             }
 
             await _unitOfWork.SaveAsync();

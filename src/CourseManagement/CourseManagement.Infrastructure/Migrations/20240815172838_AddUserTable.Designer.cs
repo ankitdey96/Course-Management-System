@@ -4,6 +4,7 @@ using CourseManagement.Infrastructure.DBContext;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CourseManagement.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240815172838_AddUserTable")]
+    partial class AddUserTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -35,10 +38,6 @@ namespace CourseManagement.Infrastructure.Migrations
                     b.Property<decimal>("Fees")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<byte[]>("Image")
-                        .IsRequired()
-                        .HasColumnType("varbinary(max)");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -50,8 +49,6 @@ namespace CourseManagement.Infrastructure.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("TeacherId");
 
                     b.ToTable("Course");
                 });
@@ -213,14 +210,14 @@ namespace CourseManagement.Infrastructure.Migrations
                         {
                             Id = new Guid("abc5d607-8ccc-46ef-b56c-c0e8fff6cc8e"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "d5f088c3-4d38-4c27-9f41-f54102e602b0",
+                            ConcurrencyStamp = "96e63ab1-2f1d-4948-a6f0-8afdbad2862d",
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "admin@gmail.com",
                             EmailConfirmed = false,
                             FirstName = "Admin",
                             LastName = "",
                             LockoutEnabled = false,
-                            PasswordHash = "AQAAAAIAAYagAAAAEMsEZUNgUC+C8vD6rgoJSLZnZOAPIVD9dRsSLgLgcuFIgNBFYzsttYsn9MAzgq54Wg==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEL2YXpprJKLmZxFygn9Y3kg1seuYQwdDjAAN3f2d/wwBKIAI9oB5dSDxLWsXn/2Kxw==",
                             PhoneNumberConfirmed = false,
                             TwoFactorEnabled = false
                         });
@@ -336,17 +333,6 @@ namespace CourseManagement.Infrastructure.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("CourseManagement.Domain.Entities.Course", b =>
-                {
-                    b.HasOne("CourseManagement.Domain.Entities.User", "Teacher")
-                        .WithMany("Courses")
-                        .HasForeignKey("TeacherId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.Navigation("Teacher");
-                });
-
             modelBuilder.Entity("CourseManagement.Infrastructure.Membership.ApplicationUserRole", b =>
                 {
                     b.HasOne("CourseManagement.Infrastructure.Membership.ApplicationRole", null)
@@ -396,11 +382,6 @@ namespace CourseManagement.Infrastructure.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("CourseManagement.Domain.Entities.User", b =>
-                {
-                    b.Navigation("Courses");
                 });
 #pragma warning restore 612, 618
         }

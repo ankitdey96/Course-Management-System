@@ -36,7 +36,22 @@
                     <span asp-validation-for="NoOfClasses" class="text-danger"></span>
 
                 </div>
-               
+
+                <div class="form-floating py-1 col-12">
+                    <select id="cboRolesList" asp-items="@Model.TeacherList" asp-for="TeacherId"
+                            class="form-select border shadow">
+                        <option selected>--Select Teacher--</option>
+                    </select>
+                    <label asp-for="TeacherId">Teacher</label>
+                    <span asp-validation-for="TeacherId" class="text-danger"></span>
+
+                </div>
+                <div class="form-floating py-1 col-12">
+                    <label asp-for="ImageFile">Upload Image</label>
+                    <input asp-for="ImageFile" type="file" class="form-control" />
+                    <span asp-validation-for="ImageFile" class="text-danger"></span>
+                </div>
+
                @*  <div class="form-floating py-1 col-12">
                     <input asp-for="Image" class="form-control border shadow" />
                     <label asp-for="ImageUrl"></label>
@@ -44,7 +59,7 @@
 
                 </div> *@
 
-                <div class="row pt-2">
+                <div class="row pt-5">
                     <div class="col-6 col-md-3">
                         <button type="submit" class="btn btn-success w-100">
                             <i class="bi bi-check-circle"></i> Create

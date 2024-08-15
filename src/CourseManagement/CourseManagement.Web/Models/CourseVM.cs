@@ -1,5 +1,7 @@
 ﻿using CourseManagement.Application.Interfaces;
 using CourseManagement.Domain.Entities;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CourseManagement.Web.Models
 {
@@ -15,6 +17,11 @@ namespace CourseManagement.Web.Models
         public decimal Fees { get; set; }
 
         public int PageNo {  get; set; }
+        public List<SelectListItem>? TeacherList { get; set; }
+        public byte[] ?Image { get; set; }
+
+        [NotMapped]
+        public IFormFile ImageFile { get; set; }
 
         public int PageSize {  get; set; }
         public CourseVM() 
@@ -35,7 +42,15 @@ namespace CourseManagement.Web.Models
 
         public async Task CreateAsync()
         {
-           await _courseManagementService.CreateCourse(Name,Description,Guid.Empty,NoOfClasses,Fees);
+           if(ImageFile is not null)
+           {
+                using (var memoryStream = new MemoryStream())
+                {
+                    await ImageFile.CopyToAsync(memoryStream);
+                    Image = memoryStream.ToArray();
+                }
+            }
+           await _courseManagementService.CreateCourse(Name,Description,Guid.Empty,NoOfClasses,Fees,Image);
         }
 
         public async Task<IList<Course>> GetCourseWithPaginationAsync()
@@ -68,12 +83,23 @@ namespace CourseManagement.Web.Models
 
         public async Task UpdateAsync()
         {
-            await _courseManagementService.UpdateCourseAsync(Id,Name,Description,NoOfClasses,Fees);
+            if (ImageFile is not null)
+            {
+                using (var memoryStream = new MemoryStream())
+                {
+                    await ImageFile.CopyToAsync(memoryStream);
+                    Image = memoryStream.ToArray();
+                }
+            }
+
+            await _courseManagementService.UpdateCourseAsync(Id,Name,Description,NoOfClasses,Fees,TeacherId,Image);
         }
 
         public async Task DeleteAsync(Guid id)
         {
             await _courseManagementService.DeleteCourseAsync(id);
         }
+
+        
     }
 }

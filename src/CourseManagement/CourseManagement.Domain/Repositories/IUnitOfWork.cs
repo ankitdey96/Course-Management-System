@@ -9,6 +9,10 @@ namespace CourseManagement.Domain.Repositories
     public interface IUnitOfWork:IAsyncDisposable,IDisposable
     {
         public ICourseRepository CourseRepository { get; }
+        public IUserRepository UserRepository { get; }
+
         Task SaveAsync();
+
+        ValueTask DisposeAsync();
     }
 }
