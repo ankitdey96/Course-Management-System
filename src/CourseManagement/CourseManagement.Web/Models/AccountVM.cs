@@ -1,4 +1,5 @@
-﻿using CourseManagement.Application.Interfaces;
+﻿using AutoMapper;
+using CourseManagement.Application.Interfaces;
 using CourseManagement.Domain.Exceptions;
 using CourseManagement.Infrastructure.Membership;
 using Microsoft.AspNetCore.Identity;
@@ -10,6 +11,7 @@ namespace CourseManagement.Web.Models
 {
     public class AccountVM
     {
+        public IMapper _mapper;
         public Guid ?UserID {  get; set; }
         public string ?UserName {  get; set; }
         public string ?FirstName {  get; set; }
@@ -32,10 +34,11 @@ namespace CourseManagement.Web.Models
 
         }
 
-        public AccountVM(UserManager<ApplicationUser>userManager,RoleManager<ApplicationRole>roleManager)
+        public AccountVM(UserManager<ApplicationUser>userManager,RoleManager<ApplicationRole>roleManager,IMapper mapper)
         {
             _userManager = userManager;
             _roleManager = roleManager;
+            _mapper = mapper;
         }
 
         public void Resolve(IServiceScopeFactory serviceScope)
@@ -43,6 +46,8 @@ namespace CourseManagement.Web.Models
             ServiceScope = serviceScope;
             _userManager = ServiceScope.CreateScope().ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
             _roleManager = ServiceScope.CreateScope().ServiceProvider.GetRequiredService<RoleManager<ApplicationRole>>();
+            _mapper = ServiceScope.CreateScope().ServiceProvider.GetRequiredService<IMapper>();
+
 
         }
 
@@ -58,15 +63,12 @@ namespace CourseManagement.Web.Models
                 foreach(var orolename in oUserRoleList)
                 {
                     var oRole = _roleManager.FindByNameAsync(orolename);
-                    oAccountVMs.Add(new AccountVM{
-                        FirstName = ouser.FirstName,
-                        LastName = ouser.LastName,
-                        UserName = ouser.UserName ?? string.Empty,
-                        Role = oRole.Result.Name,
-                        RoleId = oRole.Result.Id,
-                        Email = ouser.Email,
-                        UserID = ouser.Id
-                    });
+                    var accountVM = _mapper.Map<AccountVM>(ouser);
+
+                    accountVM.Role = oRole.Result.Name;
+                    accountVM.RoleId = oRole.Result.Id;
+
+                    oAccountVMs.Add(accountVM);
                 }
             }
 

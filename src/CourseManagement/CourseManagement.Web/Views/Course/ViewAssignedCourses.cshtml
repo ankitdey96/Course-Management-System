@@ -1,0 +1,180 @@
+﻿
+    <div class="container">
+        <h2>Enter Course Outline</h2>
+        <form id="course-outline-form">
+            <div class="form-group">
+                <label for="course-title">Course Title:</label>
+                <input type="text" id="course-title" name="course-title" placeholder="Enter course title" required>
+            </div>
+            <div class="form-group">
+                <label for="course-description">Course Description:</label>
+                <textarea id="course-description" name="course-description" placeholder="Enter course description" required></textarea>
+            </div>
+
+            <div id="module-container" class="module-container">
+                <!-- Modules will be added here -->
+            </div>
+
+            <button type="button" class="add-module">Add Module</button>
+            <button type="submit" class="submit-btn">Submit Course Outline</button>
+        </form>
+    </div>
+
+    <script>
+        const moduleContainer = document.getElementById('module-container');
+        const addModuleButton = document.querySelector('.add-module');
+        const courseOutlineForm = document.getElementById('course-outline-form');
+
+        let moduleCount = 0;
+
+        addModuleButton.addEventListener('click', () => {
+            moduleCount++;
+            const moduleDiv = document.createElement('div');
+            moduleDiv.className = 'module';
+            moduleDiv.innerHTML = `
+                    <h3>Module ${moduleCount}</h3>
+                    <div class="form-group">
+                        <label for="module-${moduleCount}-title">Module Title:</label>
+                        <input type="text" id="module-${moduleCount}-title" name="module-${moduleCount}-title" placeholder="Enter module title" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="module-${moduleCount}-description">Module Description:</label>
+                        <textarea id="module-${moduleCount}-description" name="module-${moduleCount}-description" placeholder="Enter module description" required></textarea>
+                    </div>
+                    <ul class="lesson-list" id="lesson-list-${moduleCount}">
+                        <!-- Lessons will be added here -->
+                    </ul>
+                    <button type="button" class="add-lesson" data-module-id="${moduleCount}">Add Lesson</button>
+                    <span class="remove-module">Remove Module</span>
+                `;
+
+            moduleContainer.appendChild(moduleDiv);
+
+            // Add event listener to the remove module button
+            moduleDiv.querySelector('.remove-module').addEventListener('click', () => {
+                moduleContainer.removeChild(moduleDiv);
+            });
+
+            // Add event listener to the add lesson button
+            moduleDiv.querySelector('.add-lesson').addEventListener('click', (event) => {
+                const moduleId = event.target.getAttribute('data-module-id');
+                const lessonList = document.getElementById(`lesson-list-${moduleId}`);
+                const lessonCount = lessonList.children.length + 1;
+                const lessonItem = document.createElement('li');
+                lessonItem.innerHTML = `
+                        <div class="form-group">
+                            <label for="module-${moduleId}-lesson-${lessonCount}">Lesson ${lessonCount}:</label>
+                            <input type="text" id="module-${moduleId}-lesson-${lessonCount}" name="module-${moduleId}-lesson-${lessonCount}" placeholder="Enter lesson title" required>
+                            <span class="remove-lesson">Remove Lesson</span>
+                        </div>
+                    `;
+                lessonList.appendChild(lessonItem);
+
+                // Add event listener to the remove lesson button
+                lessonItem.querySelector('.remove-lesson').addEventListener('click', () => {
+                    lessonList.removeChild(lessonItem);
+                });
+            });
+        });
+
+        courseOutlineForm.addEventListener('submit', (event) => {
+            event.preventDefault();
+            // You can process the form data here
+            alert('Course outline submitted!');
+        });
+    </script>
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        margin: 0;
+        padding: 20px;
+    }
+
+    .container {
+        max-width: 800px;
+        margin: 0 auto;
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+        text-align: center;
+        color: #333;
+    }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        .form-group textarea {
+            height: 100px;
+            resize: vertical;
+        }
+
+    .module-container {
+        margin-bottom: 20px;
+    }
+
+    .module {
+        margin-bottom: 10px;
+        padding: 15px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        background-color: #f9f9f9;
+    }
+
+        .module h3 {
+            margin-top: 0;
+        }
+
+    .lesson-list {
+        list-style-type: none;
+        padding-left: 20px;
+    }
+
+        .lesson-list li {
+            margin-bottom: 5px;
+        }
+
+    .add-module, .add-lesson, .submit-btn {
+        display: inline-block;
+        margin-top: 10px;
+        padding: 10px 20px;
+        font-size: 16px;
+        color: #fff;
+        background-color: #007bff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        text-decoration: none;
+        text-align: center;
+    }
+
+        .add-module:hover, .add-lesson:hover, .submit-btn:hover {
+            background-color: #0056b3;
+        }
+
+    .remove-module, .remove-lesson {
+        margin-left: 10px;
+        color: #d9534f;
+        cursor: pointer;
+    }
+</style>

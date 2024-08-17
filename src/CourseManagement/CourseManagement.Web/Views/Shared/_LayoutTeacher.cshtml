@@ -27,7 +27,7 @@
                 </button>
             </div>
             <partial name="_LoginPartialAdmin" />
-         </nav>
+        </nav>
     </header>
     <div class="container-fluid">
         <div class="loading spinner" style="display:none;"></div>
@@ -47,15 +47,9 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" asp-controller="Course" asp-action="ViewCourses">
+                            <a class="nav-link" asp-controller="Course" asp-action="ViewAssignedCourses">
                                 <span class="me-2"><i class="bi bi-house-door"></i></span>
-                                <span>Create Course</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-controller="Account" asp-action="AssignRole">
-                                <span class="me-2"><i class="bi bi-list-ol"></i></i></span>
-                                <span>Assign Role</span>
+                                <span>Assigned Course</span>
                             </a>
                         </li>
                     </ul>

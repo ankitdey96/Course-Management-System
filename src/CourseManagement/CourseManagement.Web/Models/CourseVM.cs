@@ -1,4 +1,5 @@
-﻿using CourseManagement.Application.Interfaces;
+﻿using AutoMapper;
+using CourseManagement.Application.Interfaces;
 using CourseManagement.Domain.Entities;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -8,6 +9,7 @@ namespace CourseManagement.Web.Models
     public class CourseVM
     {
         private IServiceScopeFactory ServiceScope { get; set; }
+        private IMapper _mapper { get; set; }
         public ICourseManagementService _courseManagementService;
         public Guid Id { get; set; }
         public string Name { get; set; }
@@ -24,20 +26,24 @@ namespace CourseManagement.Web.Models
         public IFormFile ImageFile { get; set; }
 
         public int PageSize {  get; set; }
+
+        public User? Teacher { get; set; }
         public CourseVM() 
         {
 
         }
 
-        public CourseVM(ICourseManagementService courseManagementService)
+        public CourseVM(ICourseManagementService courseManagementService,IMapper mapper)
         {
             _courseManagementService = courseManagementService;
+            _mapper = mapper;
         }
 
         public void Resolve(IServiceScopeFactory serviceScope)
         {
             ServiceScope = serviceScope;
             _courseManagementService = ServiceScope.CreateScope().ServiceProvider.GetRequiredService<ICourseManagementService>();
+            _mapper = ServiceScope.CreateScope().ServiceProvider.GetRequiredService<IMapper>();
         }
 
         public async Task CreateAsync()
@@ -50,7 +56,7 @@ namespace CourseManagement.Web.Models
                     Image = memoryStream.ToArray();
                 }
             }
-           await _courseManagementService.CreateCourse(Name,Description,Guid.Empty,NoOfClasses,Fees,Image);
+           await _courseManagementService.CreateCourse(Name,Description,TeacherId,NoOfClasses,Fees,Image);
         }
 
         public async Task<IList<Course>> GetCourseWithPaginationAsync()
@@ -67,15 +73,7 @@ namespace CourseManagement.Web.Models
             CourseVM oCourseVM = new CourseVM();
             if (oCourse is not null)
             {
-                oCourseVM = new CourseVM
-                {
-                    Name = oCourse.Name,
-                    Description = oCourse.Description,
-                    TeacherId = oCourse.TeacherId,
-                    NoOfClasses = oCourse.NoOfClasses,
-                    Fees = oCourse.Fees,
-                };
-
+                _mapper.Map(oCourse, oCourseVM);
             }
 
             return oCourseVM;
@@ -100,6 +98,14 @@ namespace CourseManagement.Web.Models
             await _courseManagementService.DeleteCourseAsync(id);
         }
 
-        
+        public async Task<List<CourseVM>> GetAllCoursesAsync()
+        {
+            var oCourse = await _courseManagementService.GetAllCourses();
+            List<CourseVM> oCourseVMs = new List<CourseVM>();
+
+            oCourseVMs = _mapper.Map<List<CourseVM>>(oCourse);
+
+            return oCourseVMs;
+        }
     }
 }

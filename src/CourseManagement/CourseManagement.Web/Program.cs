@@ -4,11 +4,12 @@ using CourseManagement.Domain.Repositories;
 using CourseManagement.Infrastructure.DBContext;
 using CourseManagement.Infrastructure.Membership;
 using CourseManagement.Infrastructure.Repository;
+using CourseManagement.Web;
 using CourseManagement.Web.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using Serilog;
+using System.Text.Json.Serialization;
 
 var Configuration = new ConfigurationBuilder()
     .SetBasePath(Directory.GetCurrentDirectory())
@@ -37,6 +38,8 @@ try
     builder.Services.AddIdentity<ApplicationUser, ApplicationRole>()
         .AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultTokenProviders();
     builder.Services.AddControllersWithViews();
+    builder.Services.AddControllers().AddJsonOptions(x => x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
+    builder.Services.AddAutoMapper(typeof(AutoMapperProfile).Assembly);
     builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
     builder.Services.AddScoped<ICourseManagementService, CourseManagementService>();
     builder.Services.AddScoped<IUserService, UserService>();

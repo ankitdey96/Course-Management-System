@@ -1,3 +1,5 @@
+using CourseManagement.Domain.Entities;
+using CourseManagement.Web.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
@@ -6,15 +8,22 @@ namespace CourseManagement.Web.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly IServiceScopeFactory _scopeFactory;
 
-        public HomeController(ILogger<HomeController> logger)
+
+        public HomeController(ILogger<HomeController> logger, IServiceScopeFactory scopeFactory)
         {
             _logger = logger;
+            _scopeFactory = scopeFactory;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var oCourseVM = Activator.CreateInstance<CourseVM>();
+            oCourseVM.Resolve(_scopeFactory);
+            var oData = await oCourseVM.GetAllCoursesAsync();
+
+            return View(oData);
         }
 
         public IActionResult Privacy()

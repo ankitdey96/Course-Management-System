@@ -2,6 +2,10 @@
 {
     Layout = "_LayoutAdmin";
 }
+@if (User.IsInRole("Teacher"))
+{
+    Layout = "_LayoutTeacher";
+}
 else{
     Layout = "_Layout";
 }

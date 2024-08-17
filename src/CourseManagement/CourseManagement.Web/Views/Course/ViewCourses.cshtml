@@ -36,10 +36,12 @@
                 const gridOptions = {
                     columnDefs :[
                         { valueGetter: x => { return (x.node.rowIndex + 1) }, headerName: "SL", width: 55 },
-                        { field: "Name", headerName: "Course Name", minWidth: 170 },
-                        { field: "Description", headerName: "Course Description", minWidth: 170 },
-                        { field: "NoOfClasses", headerName: "No Of Classes", minWidth: 170 },
-                        { field: "Fees", headerName: "Fees", minWidth: 170 },
+                        { field: "name", headerName: "Course Name", minWidth: 170 },
+                        { field: "description", headerName: "Course Description", minWidth: 270 },
+                        { field: "noOfClasses", headerName: "No Of Classes", minWidth: 70 },
+                        { field: "fees", headerName: "Fees", minWidth: 70 },
+                        { field: "teacher.fullName", headerName: "Teacher Name", minWidth: 170 },
+
                         { field: "actions",headerName: "Actions",cellRenderer: CustomButtonComponent }
                     ],
                     defaultColDef: {
@@ -97,7 +99,7 @@
 
         function EditCourse(oCourse) {
             debugger
-            window.location.href = '/Course/Update/'+oCourse.Id;
+            window.location.href = '/Course/Update/'+oCourse.id;
         }
 
         function DeleteCourse(oCourse){
@@ -105,7 +107,7 @@
             $.ajax({
             type: "POST",
             dataType: "json",
-            url: "/Course/Delete/"+oCourse.Id,
+            url: "/Course/Delete/"+oCourse.id,
             success: function (data) {
                 debugger
                 oMessage = data;
@@ -144,29 +146,17 @@
                 type: "POST",
                 contentType: "application/json", //must be added
                 dataType: "json", //better to add, not mandatory
-                // // beforeSend: function (xhr) {
-                // //     xhr.setRequestHeader("Authorization",
-                // //         "Bearer " + '/* HttpContextAccessor.HttpContext.Session.GetString("token") */');
-                // // },
                 data: JSON.stringify(oCourseVM),
                 success: function (data) {
                     debugger;
-                    var oCourses = data;
-                    const dataSource = {
-                    rowCount: undefined, // behave as infinite scroll
-                        getRows: (params) => {
-                        const rowsThisPage = oCourses.slice(0, 6);
-                            console.log(params, "params ajax");
-                            params.successCallback(rowsThisPage, 11);
-                    },
-                    };
-                    // // gridApi.paginationGoToPage(2);
-                    //gridApi.setGridOption("datasource", dataSource);
-                     gridApi.setGridOption("rowData", oCourses);
+                    var oCourses =  data;
+                    gridApi.setGridOption("rowData", oCourses);
 
 
                 },
                 error: function (xhr, status, error) {
+                    debugger;
+                    console.log(xhr, status, error, "error");
                     alert(error);
                 }
 

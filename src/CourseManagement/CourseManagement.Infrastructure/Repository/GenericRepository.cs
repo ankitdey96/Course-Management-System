@@ -4,6 +4,7 @@ using CourseManagement.Infrastructure.DBContext;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 using System.Linq.Dynamic.Core;
+using Microsoft.EntityFrameworkCore.Query;
 
 namespace CourseManagement.Infrastructure.Repository
 {
@@ -42,9 +43,22 @@ namespace CourseManagement.Infrastructure.Repository
             });
         }
 
-        public async Task<IList<TEntity>> GetAllAsync()
+        public async Task<List<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>> filter = null,
+            List<string> includes = null,
+             Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null)
         {
             IQueryable<TEntity> query = dbSet;
+            if (filter is not null)
+                query = query.Where(filter);
+            if (includes != null)
+                foreach (var includeProperty in includes)
+                {
+                    query = query.Include(includeProperty);
+                }
+            if (orderBy is not null)
+                query = orderBy(query);
+
+
             return await query.ToListAsync();
         }
 
@@ -55,7 +69,7 @@ namespace CourseManagement.Infrastructure.Repository
 
         public async Task<IList<TEntity>> GetPaginateList(int pageNo = 1, int pageSize = 10,
             Expression<Func<TEntity, bool>> filter = null,
-            Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> includes = null,
+            List<string> includes = null,
              Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null)
         {
             IQueryable<TEntity> query = dbSet;
@@ -64,7 +78,10 @@ namespace CourseManagement.Infrastructure.Repository
             
 
             if(includes is not null)
-                query = includes(query);
+                foreach (var includeProperty in includes)
+                {
+                    query = query.Include(includeProperty);
+                }
 
             IList<TEntity> data;
 

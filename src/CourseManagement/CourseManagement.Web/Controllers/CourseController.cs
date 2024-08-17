@@ -1,13 +1,15 @@
 ﻿using CourseManagement.Application.Interfaces;
+using CourseManagement.Domain.Entities;
 using CourseManagement.Domain.Exceptions;
 using CourseManagement.Web.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace CourseManagement.Web.Controllers
 {
-    [Authorize(Roles ="Admin")]
+    [Authorize(Roles ="Admin,Teacher")]
     public class CourseController : Controller
     {
         private readonly IServiceScopeFactory _scopeFactory;
@@ -22,6 +24,10 @@ namespace CourseManagement.Web.Controllers
             return View();
         }
 
+        public IActionResult ViewAssignedCourses()
+        {
+            return View();
+        }
         public async Task<IActionResult> Create()
         {
             var oCourseVM = _scopeFactory.CreateScope().ServiceProvider.GetRequiredService<CourseVM>();
@@ -91,11 +97,21 @@ namespace CourseManagement.Web.Controllers
 
         }
         [HttpPost]
-        public async Task<JsonResult> GetCourses([FromBody]CourseVM oCourseVM)
+        public async Task<IList<Course>> GetCourses([FromBody]CourseVM oCourseVM)
         {
-            oCourseVM.Resolve(_scopeFactory);
-            var data = await oCourseVM.GetCourseWithPaginationAsync();
-            return Json(data, new JsonSerializerOptions { PropertyNamingPolicy=null});
+            try
+            {
+                oCourseVM.Resolve(_scopeFactory);
+                IList<Course> data = await oCourseVM.GetCourseWithPaginationAsync();
+                return data;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                TempData["error"] = ex.Message;
+                return [];
+            }
+
         }
         [HttpPost,ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CourseVM oCourseVM)

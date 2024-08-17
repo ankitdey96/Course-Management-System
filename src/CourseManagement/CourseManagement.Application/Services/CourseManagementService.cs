@@ -2,7 +2,8 @@
 using CourseManagement.Domain.Entities;
 using CourseManagement.Domain.Exceptions;
 using CourseManagement.Domain.Repositories;
-using System.Xml.Linq;
+using System.Linq.Expressions;
+
 
 namespace CourseManagement.Application.Services
 {
@@ -15,28 +16,42 @@ namespace CourseManagement.Application.Services
         }
         public async Task CreateCourse(string Name, string Description, Guid TeacherID, int NoOfClasses, decimal Fees, byte[] Image)
         {
-            bool IsDuplicateTitle =await _unitOfWork.CourseRepository.IsDuplicate(x => x.Name == Name);
-
-            if (IsDuplicateTitle)
-                throw new DuplicateTitleException();
-            Course oCourse = new Course
+            try
             {
-                Name = Name,
-                Description = Description,
-                TeacherId = TeacherID,
-                NoOfClasses = NoOfClasses,
-                Fees = Fees, 
-                Image = Image
-            };
+                bool IsDuplicateTitle = await _unitOfWork.CourseRepository.IsDuplicate(x => x.Name == Name);
 
-            await _unitOfWork.CourseRepository.AddAsync(oCourse);
-            await _unitOfWork.SaveAsync();
+                if (IsDuplicateTitle)
+                    throw new DuplicateTitleException();
+                Course oCourse = new Course
+                {
+                    Name = Name,
+                    Description = Description,
+                    TeacherId = TeacherID,
+                    NoOfClasses = NoOfClasses,
+                    Fees = Fees,
+                    Image = Image
+                };
+
+                await _unitOfWork.CourseRepository.AddAsync(oCourse);
+                await _unitOfWork.SaveAsync();
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.InnerException == null ? ex.Message : ex.InnerException.Message);
+            }
         }
 
         public async Task DeleteCourseAsync(Guid id)
         {
             await _unitOfWork.CourseRepository.RemoveAsync(id);
             await _unitOfWork.SaveAsync();
+        }
+
+        public async Task<List<Course>> GetAllCourses()
+        {
+            List<string> include = new List<string>() { "Teacher"};
+            return await _unitOfWork.CourseRepository.GetAllAsync(null,include,null);
         }
 
         public async Task<Course> GetCourseByID(Guid id)
@@ -46,10 +61,21 @@ namespace CourseManagement.Application.Services
 
         public async Task<IList<Course>> GetPagedCourseAsync(int pageNo, int pageSize = 10, Func<IQueryable<Course>, IOrderedQueryable<Course>> orderBy = null)
         {
-            if (orderBy is null)
-                orderBy = query => query.OrderBy(x => x.Name);
+            try
+            {
+                if (orderBy is null)
+                    orderBy = query => query.OrderBy(x => x.Name);
+               
+                List<string> include = new List<string>() { "Teacher" };
+                return await _unitOfWork.CourseRepository.GetPaginateList(pageNo, pageSize, null, include, orderBy);
 
-            return await _unitOfWork.CourseRepository.GetPaginateList(pageNo, pageSize,null,null,orderBy);
+            }
+            catch(Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+
+
         }
 
         public async Task UpdateCourseAsync(Guid id, string name, string description, int noOfClasses, decimal fees, Guid TeacherID, byte[] Image)
