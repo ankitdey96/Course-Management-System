@@ -54,6 +54,11 @@ namespace CourseManagement.Application.Services
             return await _unitOfWork.CourseRepository.GetAllAsync(null,include,null);
         }
 
+        public async Task<IList<Course>> GetAssignedCourse(Guid logINTeacherID)
+        {
+            return await _unitOfWork.CourseRepository.GetAllAsync(x => x.TeacherId == logINTeacherID);
+        }
+
         public async Task<Course> GetCourseByID(Guid id)
         {
             return await _unitOfWork.CourseRepository.GetByIdAsync(id);

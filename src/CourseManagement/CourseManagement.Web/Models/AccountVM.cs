@@ -1,11 +1,11 @@
 ﻿using AutoMapper;
-using CourseManagement.Application.Interfaces;
 using CourseManagement.Domain.Exceptions;
 using CourseManagement.Infrastructure.Membership;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using NuGet.Packaging;
+
 
 namespace CourseManagement.Web.Models
 {
@@ -128,5 +128,7 @@ namespace CourseManagement.Web.Models
 
             return oRoleList;
         }
+
+        
     }
 }

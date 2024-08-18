@@ -107,5 +107,13 @@ namespace CourseManagement.Web.Models
 
             return oCourseVMs;
         }
+
+        public async Task<IList<Course>> GetAssignedCourseOfTeacher(string TeacherID)
+        {
+            Guid LogINTeacherID = Guid.Parse(TeacherID);
+
+            return await _courseManagementService.GetAssignedCourse(LogINTeacherID);
+
+        }
     }
 }

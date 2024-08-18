@@ -1,11 +1,11 @@
-﻿using CourseManagement.Application.Interfaces;
-using CourseManagement.Domain.Entities;
+﻿using CourseManagement.Domain.Entities;
 using CourseManagement.Domain.Exceptions;
+using CourseManagement.Infrastructure.Membership;
 using CourseManagement.Web.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using System.Text.Json;
-using System.Text.Json.Serialization;
+
 
 namespace CourseManagement.Web.Controllers
 {
@@ -14,11 +14,14 @@ namespace CourseManagement.Web.Controllers
     {
         private readonly IServiceScopeFactory _scopeFactory;
         public ILogger<CourseController> _logger;
-        public CourseController(IServiceScopeFactory serviceScopeFactory,ILogger<CourseController>logger) 
+        public UserManager<ApplicationUser> _userManager;
+        public CourseController(IServiceScopeFactory serviceScopeFactory,ILogger<CourseController>logger,UserManager<ApplicationUser>userManager ) 
         {
             _scopeFactory = serviceScopeFactory;
             _logger = logger;
+            _userManager = userManager;
         }   
+
         public IActionResult ViewCourses()
         {
             return View();
@@ -113,6 +116,35 @@ namespace CourseManagement.Web.Controllers
             }
 
         }
+
+        [HttpPost]
+        public async Task<IList<Course>> GetAssignedCourses()
+        {
+            try
+            {
+                CourseVM oCourseVM = Activator.CreateInstance<CourseVM>();
+                oCourseVM.Resolve(_scopeFactory);
+
+                string LogInUserID = _userManager.GetUserId(User);
+                if(LogInUserID is not null)
+                {
+                    IList<Course> data = await oCourseVM.GetAssignedCourseOfTeacher(LogInUserID);
+                    return data;
+                }
+                else
+                {
+                    throw new NotFoundException("User");
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                TempData["error"] = ex.Message;
+                return [];
+            }
+
+        }
+        
         [HttpPost,ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CourseVM oCourseVM)
         {
