@@ -1,0 +1,204 @@
+﻿@model CourseVM
+
+<div class="container">
+    <h2>Enter Course Outline</h2>
+    <form id="course-outline-form">
+        <div class="form-group">
+            <label for="course-title">Course Title:</label>
+            <input class="form-control" asp-for="Name" aria-required="true" disabled />
+
+        </div>
+        <div class="form-group">
+            <label for="course-description">Course Description:</label>
+            <input class="form-control" asp-for="Description" aria-required="true" disabled />
+
+        </div>
+
+        <div id="topic-container">
+            <!-- Topics will be added here -->
+        </div>
+
+        <button type="button" class="add-topic">Add Topic</button>
+        <button type="submit" class="submit-btn">Submit Course Outline</button>
+    </form>
+</div>
+
+<script>
+    const topicContainer = document.getElementById('topic-container');
+    const addTopicButton = document.querySelector('.add-topic');
+    const courseOutlineForm = document.getElementById('course-outline-form');
+
+    let topicCount = 0;
+
+    addTopicButton.addEventListener('click', () => {
+        debugger;
+        topicCount++;
+        const topicDiv = document.createElement('div');
+        topicDiv.className = 'topic';
+        topicDiv.innerHTML = `
+                        <h3>Topic ${topicCount}</h3>
+                        <div class="form-group">
+                            <label for="topic-${topicCount}-title">Topic Title:</label>
+                            <input type="text" id="topic-${topicCount}-title" name="topic-${topicCount}-title" placeholder="Enter topic title" required>
+                        </div>
+                        <ul class="lesson-list" id="lesson-list-${topicCount}">
+                            <!-- Lessons will be added here -->
+                        </ul>
+                        <button type="button" class="add-lesson" data-topic-id="${topicCount}">Add Lesson</button>
+                        <span class="remove-topic">Remove topic</span>
+                    `;
+
+        topicContainer.appendChild(topicDiv);
+
+        // Add event listener to the remove topic button
+        topicDiv.querySelector('.remove-topic').addEventListener('click', () => {
+            topicContainer.removeChild(topicDiv);
+        });
+
+        // Add event listener to the add lesson button
+        topicDiv.querySelector('.add-lesson').addEventListener('click', (event) => {
+            const topicId = event.target.getAttribute('data-topic-id');
+            const lessonList = document.getElementById(`lesson-list-${topicId}`);
+            const lessonCount = lessonList.children.length + 1;
+            const lessonItem = document.createElement('li');
+            lessonItem.innerHTML = `
+                            <div class="form-group">
+                                <label for="topic-${topicId}-lesson-${lessonCount}">Lesson ${lessonCount}:</label>
+                                <input type="text" id="topic-${topicId}-lesson-${lessonCount}" name="topic-${topicId}-lesson-${lessonCount}" placeholder="Enter lesson title" required>
+                                <span class="remove-lesson">Remove Lesson</span>
+                            </div>
+                        `;
+            lessonList.appendChild(lessonItem);
+
+            // Add event listener to the remove lesson button
+            lessonItem.querySelector('.remove-lesson').addEventListener('click', () => {
+                lessonList.removeChild(lessonItem);
+            });
+        });
+    });
+
+    courseOutlineForm.addEventListener('submit', (event) => {
+        event.preventDefault();
+
+        const formData = new FormData(courseOutlineForm);
+        const CourseTopics = [];
+        document.querySelectorAll('.topic').forEach((topicDiv, index) => {
+            const topicId = index + 1;
+            const topicTitle = formData.get(`topic-${topicId}-title`);
+
+            const lessons = [];
+
+            topicDiv.querySelectorAll('.lesson-list li').forEach((lessonItem, lessonIndex) => {
+                const lessonTitle = formData.get(`topic-${topicId}-lesson-${lessonIndex + 1}`);
+                lessons.push({
+                    title: lessonTitle
+                });
+            });
+
+            CourseTopics.push({
+                CourseID:'@Model.Id',
+                TopicName: topicTitle,
+                TopicDetails:lessons
+            });
+            SaveCourseTopics(CourseTopics);
+        });
+
+
+        function SaveCourseTopics(CourseTopics) {
+            console.log(CourseTopics,"Created Object");
+
+        }
+    });
+</script>
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 20px;
+    }
+
+    .container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+        text-align: center;
+    }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        .form-group textarea {
+            height: 100px;
+            resize: vertical;
+        }
+
+    .topic-container {
+        margin-bottom: 20px;
+    }
+
+    .topic {
+        margin-bottom: 10px;
+        padding: 15px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        background-color: #f9f9f9;
+    }
+
+        .topic h3 {
+            margin-top: 0;
+        }
+
+    .lesson-list {
+        list-style-type: none;
+        padding-left: 20px;
+    }
+
+        .lesson-list li {
+            margin-bottom: 5px;
+        }
+
+    .add-topic, .add-lesson, .submit-btn {
+        display: inline-block;
+        margin-top: 10px;
+        padding: 10px 20px;
+        font-size: 16px;
+        color: #fff;
+        background-color: #007bff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        text-decoration: none;
+        text-align: center;
+    }
+
+        .add-topic:hover, .add-lesson:hover, .submit-btn:hover {
+            background-color: #0056b3;
+        }
+
+    .remove-topic, .remove-lesson {
+        margin-left: 10px;
+        color: #d9534f;
+        cursor: pointer;
+    }
+</style>

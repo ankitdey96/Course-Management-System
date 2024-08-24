@@ -172,5 +172,40 @@ namespace CourseManagement.Web.Controllers
             }
             return View(oCourseVM);
         }
+
+        public async Task<IActionResult> AddCourseOutline(Guid Id)
+        {
+            var oCourseVM = _scopeFactory.CreateScope().ServiceProvider.GetRequiredService<CourseVM>();
+            var model = await oCourseVM.GetCoure(Id);
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateCourseOutLine(CourseVM oCourseVM)
+        {
+                try
+                {
+                    oCourseVM.Resolve(_scopeFactory);
+                    await oCourseVM.CreateAsync();
+                    TempData["success"] = "Data Saved Successfully";
+
+                    return RedirectToAction("ViewCourses");
+                }
+                catch (DuplicateTitleException ex)
+                {
+                    TempData["error"] = ex.Message;
+
+                }
+                catch (Exception ex)
+                {
+                    TempData["error"] = "There was a Problem in Creating Course";
+                    _logger.LogError(ex.Message);
+                }
+
+            return View(oCourseVM);
+        }
+
+
     }
 }

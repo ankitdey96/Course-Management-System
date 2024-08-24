@@ -41,7 +41,8 @@ namespace CourseManagement.Infrastructure.DBContext
             );
 
             builder.Entity<Course>().HasOne(x => x.Teacher).WithMany(x => x.Courses).HasForeignKey(x => x.TeacherId).OnDelete(DeleteBehavior.NoAction);
-
+            builder.Entity<CourseTopic>().HasOne(x => x.Course).WithMany(x =>x.CourseTopics).HasForeignKey(x => x.CourseID).OnDelete(DeleteBehavior.Cascade);
+            builder.Entity<CourseTopicDetail>().HasOne(x => x.CourseTopic).WithMany(x => x.TopicDetails).HasForeignKey(x => x.TopicId).OnDelete(DeleteBehavior.Cascade);
         }
 
         private void SeedAdminUserWithRole(ModelBuilder builder)

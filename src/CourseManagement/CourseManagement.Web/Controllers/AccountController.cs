@@ -89,6 +89,10 @@ namespace CourseManagement.Web.Controllers
                 {
                     return RedirectToAction("Index", "Dashboard");
                 }
+                if(oUser.RoleName == "Teacher")
+                {
+                    return RedirectToAction("ViewAssignedCourses", "Course");
+                }
                 else
                 {
                     return RedirectToAction("Index","Home");

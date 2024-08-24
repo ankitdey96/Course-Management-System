@@ -4,6 +4,7 @@ using CourseManagement.Infrastructure.DBContext;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CourseManagement.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240823150849_AddCourseTopicTable")]
+    partial class AddCourseTopicTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -69,31 +72,14 @@ namespace CourseManagement.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<Guid>("TopicParentID")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CourseID");
 
                     b.ToTable("CourseTopic");
-                });
-
-            modelBuilder.Entity("CourseManagement.Domain.Entities.CourseTopicDetail", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("TopicId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("TopicName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("TopicId");
-
-                    b.ToTable("CourseTopicDetail");
                 });
 
             modelBuilder.Entity("CourseManagement.Domain.Entities.User", b =>
@@ -253,14 +239,14 @@ namespace CourseManagement.Infrastructure.Migrations
                         {
                             Id = new Guid("abc5d607-8ccc-46ef-b56c-c0e8fff6cc8e"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "ec6dc46c-47bc-4f4c-b874-14ac5c36bf99",
+                            ConcurrencyStamp = "7e21608f-fd69-4d1a-a765-456208186d31",
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "admin@gmail.com",
                             EmailConfirmed = false,
                             FirstName = "Admin",
                             LastName = "",
                             LockoutEnabled = false,
-                            PasswordHash = "AQAAAAIAAYagAAAAEDxpCJ11cMQ8Qxcd9v37bL5NlMXtO6GGWOqH9/bLBCGXHxDCz2ACEttgBBwTRXGwFg==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEIw4CdBD2AmXmVQswL1+5lDyQ5MJNOcrI6y01jmJ4esfE358p75Bqo2hDhE9kS/COQ==",
                             PhoneNumberConfirmed = false,
                             TwoFactorEnabled = false
                         });
@@ -398,17 +384,6 @@ namespace CourseManagement.Infrastructure.Migrations
                     b.Navigation("Course");
                 });
 
-            modelBuilder.Entity("CourseManagement.Domain.Entities.CourseTopicDetail", b =>
-                {
-                    b.HasOne("CourseManagement.Domain.Entities.CourseTopic", "CourseTopic")
-                        .WithMany("TopicDetails")
-                        .HasForeignKey("TopicId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("CourseTopic");
-                });
-
             modelBuilder.Entity("CourseManagement.Infrastructure.Membership.ApplicationUserRole", b =>
                 {
                     b.HasOne("CourseManagement.Infrastructure.Membership.ApplicationRole", null)
@@ -463,11 +438,6 @@ namespace CourseManagement.Infrastructure.Migrations
             modelBuilder.Entity("CourseManagement.Domain.Entities.Course", b =>
                 {
                     b.Navigation("CourseTopics");
-                });
-
-            modelBuilder.Entity("CourseManagement.Domain.Entities.CourseTopic", b =>
-                {
-                    b.Navigation("TopicDetails");
                 });
 
             modelBuilder.Entity("CourseManagement.Domain.Entities.User", b =>

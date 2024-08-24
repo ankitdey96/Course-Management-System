@@ -9,7 +9,7 @@
     <div class="card-body border p-4">
         <div class="row pb-3">
             <div class="col-6 offset-6 text-end">
-                <a asp-controller="Course" asp-action="Create" class="btn btn-secondary">
+                <a onclick="AddCourseOutLine()" class="btn btn-secondary">
                     <i class="bi bi-plus-circle"></i> Add Course Outline
                 </a>
             </div>
@@ -40,8 +40,7 @@
             defaultColDef: {
                 filter: "agTextColumnFilter",
             },
-            rowSelection: "multiple",
-            suppressRowClickSelection: true,
+            rowSelection: "single",
             pagination: true,
             paginationPageSize: 20,
             paginationPageSizeSelector: [20, 50, 10]
@@ -66,5 +65,16 @@
             }
 
         });
+    }
+
+    function AddCourseOutLine() {
+        debugger;
+        var oCourse = gridApi.getSelectedRows()[0];
+        if (oCourse == null) {
+            alert("Please Select a Course");
+            return;
+        }
+        console.log(oCourse);
+        window.location.href = "AddCourseOutline/" + oCourse.id;
     }
 </script>

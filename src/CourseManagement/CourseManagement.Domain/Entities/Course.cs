@@ -16,6 +16,6 @@ namespace CourseManagement.Domain.Entities
 
         [NotMapped] 
         public IFormFile ImageFile { get; set; }  
-
+        public List<CourseTopic> CourseTopics {  get; set; }
     }
 }

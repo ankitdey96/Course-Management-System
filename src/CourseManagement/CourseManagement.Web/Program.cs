@@ -43,6 +43,7 @@ try
     builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
     builder.Services.AddScoped<ICourseManagementService, CourseManagementService>();
     builder.Services.AddScoped<IUserService, UserService>();
+    builder.Services.AddScoped<ICourseOutLineManagementService, CourseOutLineManagementService>();
     builder.Services.AddScoped<CourseVM, CourseVM>();
     var app = builder.Build();
 
