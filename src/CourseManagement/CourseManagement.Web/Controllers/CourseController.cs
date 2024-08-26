@@ -182,28 +182,24 @@ namespace CourseManagement.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateCourseOutLine(CourseVM oCourseVM)
+        public async Task<IActionResult> CreateCourseOutLine([FromBody]List<CourseTopicVM>oCourseTopicVMs)
         {
                 try
                 {
-                    oCourseVM.Resolve(_scopeFactory);
-                    await oCourseVM.CreateAsync();
+                    var oCourseTopicVM = Activator.CreateInstance<CourseTopicVM>();
+                    oCourseTopicVM.Resolve(_scopeFactory);
+                    await oCourseTopicVM.CreateoutLine(oCourseTopicVMs);
                     TempData["success"] = "Data Saved Successfully";
 
                     return RedirectToAction("ViewCourses");
                 }
-                catch (DuplicateTitleException ex)
-                {
-                    TempData["error"] = ex.Message;
-
-                }
                 catch (Exception ex)
                 {
-                    TempData["error"] = "There was a Problem in Creating Course";
+                    TempData["error"] = "There was a Problem in Creating Course Outline.";
                     _logger.LogError(ex.Message);
                 }
 
-            return View(oCourseVM);
+            return View(oCourseTopicVMs);
         }
 
 

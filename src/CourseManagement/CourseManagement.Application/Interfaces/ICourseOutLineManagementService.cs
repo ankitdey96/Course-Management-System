@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CourseManagement.Domain.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,6 +9,6 @@ namespace CourseManagement.Application.Interfaces
 {
     public interface ICourseOutLineManagementService
     {
-
+        Task CreateCourseOutline(Guid courseID, string topicName, List<CourseTopicDetail> courseTopicDetails);
     }
 }

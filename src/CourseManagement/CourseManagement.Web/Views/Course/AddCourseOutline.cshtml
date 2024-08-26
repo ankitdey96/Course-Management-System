@@ -91,7 +91,7 @@
             topicDiv.querySelectorAll('.lesson-list li').forEach((lessonItem, lessonIndex) => {
                 const lessonTitle = formData.get(`topic-${topicId}-lesson-${lessonIndex + 1}`);
                 lessons.push({
-                    title: lessonTitle
+                    TopicName: lessonTitle
                 });
             });
 
@@ -106,7 +106,27 @@
 
         function SaveCourseTopics(CourseTopics) {
             console.log(CourseTopics,"Created Object");
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("CreateCourseOutLine", "Course")",
+                contentType: "application/json", //must be added
+                dataType: "json", //better to add, not mandatory
+                data: JSON.stringify(CourseTopics),
 
+                success: function (data) {
+                    // gridApi.setGridOption("rowData", data);
+
+                },
+                failure: function (response) {
+
+                    // $('.spinner').hide();
+                    alert(response.responseText);
+                },
+                error: function (response) {
+                    // $('.spinner').hide();
+                    alert(response.responseText);
+                }
+            });
         }
     });
 </script>

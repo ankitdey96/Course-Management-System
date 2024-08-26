@@ -10,7 +10,7 @@ namespace CourseManagement.Domain.Repositories
     {
         public ICourseRepository CourseRepository { get; }
         public IUserRepository UserRepository { get; }
-
+        public ICourseTopicRepository CourseTopicRepository { get; }
         Task SaveAsync();
 
         ValueTask DisposeAsync();

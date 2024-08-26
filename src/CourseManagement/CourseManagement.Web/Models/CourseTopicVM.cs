@@ -14,7 +14,7 @@ namespace CourseManagement.Web.Models
         private IServiceScopeFactory ServiceScope { get; set; }
         private IMapper _mapper { get; set; }
         public ICourseOutLineManagementService _courseOutLineManagementService;
-        public List<CourseTopicDetail> CourseTopicDetails {  get; set; }
+        public List<CourseTopicDetail> TopicDetails {  get; set; }
         public CourseTopicVM()
         {
         }
@@ -33,6 +33,12 @@ namespace CourseManagement.Web.Models
             _mapper = ServiceScope.CreateScope().ServiceProvider.GetRequiredService<IMapper>();
         }
 
-
+        public async Task CreateoutLine(List<CourseTopicVM> oCourseTopicVMs)
+        {
+            foreach(CourseTopicVM oItem in oCourseTopicVMs)
+            {
+               await  _courseOutLineManagementService.CreateCourseOutline(oItem.CourseID,oItem.TopicName,oItem.TopicDetails);
+            }
+        }
     }
 }
