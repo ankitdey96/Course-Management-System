@@ -16,7 +16,7 @@ namespace CourseManagement.Domain.Repositories
             List<string> includes = null,
              Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null);
 
-        Task<TEntity> GetByIdAsync(Tkey id);
+        Task<TEntity> GetByIdAsync(Tkey id, List<string> includes = null);
 
         Task<bool> IsDuplicate(Expression<Func<TEntity, bool>> filter = null);
 

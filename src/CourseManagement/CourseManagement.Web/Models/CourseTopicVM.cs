@@ -40,5 +40,10 @@ namespace CourseManagement.Web.Models
                await  _courseOutLineManagementService.CreateCourseOutline(oItem.CourseID,oItem.TopicName,oItem.TopicDetails);
             }
         }
+
+        public async Task<IList<Course>> GetCourseDetail(Guid courseID)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

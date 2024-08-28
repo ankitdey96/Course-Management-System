@@ -62,9 +62,20 @@ namespace CourseManagement.Infrastructure.Repository
             return await query.ToListAsync();
         }
 
-        public async Task<TEntity> GetByIdAsync(TKey id)
+        public async Task<TEntity> GetByIdAsync(TKey id, List<string> includes = null)
         {
-            return await dbSet.FindAsync(id);
+            IQueryable<TEntity> query = dbSet;
+
+            if (includes is not null)
+            {
+                foreach (string include in includes)
+                {
+                    query = query.Include(include);
+                }
+            }
+
+            TEntity entity = await query.FirstOrDefaultAsync(e => e.Id.Equals(id));
+            return entity;
         }
 
         public async Task<IList<TEntity>> GetPaginateList(int pageNo = 1, int pageSize = 10,

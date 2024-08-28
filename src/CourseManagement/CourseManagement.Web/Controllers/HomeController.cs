@@ -26,6 +26,15 @@ namespace CourseManagement.Web.Controllers
             return View(oData);
         }
 
+        public async Task<IActionResult>CourseDetail(Guid CourseID)
+        {
+            var oCourseVM = Activator.CreateInstance<CourseVM>();
+            oCourseVM.Resolve(_scopeFactory);
+            var oData = await oCourseVM.GetCoure(CourseID);
+
+            return View(oData);
+        }
+
         public IActionResult Privacy()
         {
             return View();

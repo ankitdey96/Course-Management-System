@@ -14,16 +14,7 @@
         {
             <div class="col-md-4 mb-4">
                 <div class="card">
-                    @* <img src="data:image/png;base64,@Convert.ToBase64String(@course.Image)" class="card-img-top" alt="Course Logo">
-                    <div class="card-body">
-                        <h5 class="card-title">@course.Name</h5>
-                        <p class="card-text">@course.Description</p>
-                        <ul class="list-group list-group-flush">
-                            <li class="list-group-item"><strong>Number of Classes:</strong> @course.NoOfClasses</li>
-                            <li class="list-group-item"><strong>Teacher:</strong> @course.Teacher.FullName</li>
-                        </ul>
-                        <a href="@Url.Action("Details", "Courses", new { id = course.Id })" class="btn btn-primary mt-3">View Details</a>
-                    </div> *@
+                    
                     <div class="card-header">
                         <img src="data:image/png;base64,@Convert.ToBase64String(@course.Image)" alt="Course Image">
                     </div>
@@ -35,7 +26,7 @@
                             <div class="days-remaining">@course.Teacher.FullName</div>
                         </div>
  *@                     <h3>@course.Name</h3>
-                        <a href="#" class="details-button">View Details</a>
+                        <a asp-controller="Home" asp-action="CourseDetail" asp-route-CourseID=@course.Id class="details-button">View Details</a>
                     </div>
                 </div>
             </div>
