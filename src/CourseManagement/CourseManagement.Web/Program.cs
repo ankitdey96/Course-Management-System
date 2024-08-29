@@ -45,6 +45,7 @@ try
     builder.Services.AddScoped<IUserService, UserService>();
     builder.Services.AddScoped<ICourseOutLineManagementService, CourseOutLineManagementService>();
     builder.Services.AddScoped<CourseVM, CourseVM>();
+    builder.Services.AddScoped<ICourseEnrollmentService, CourseEnrollmentService>();
     var app = builder.Build();
 
     // Configure the HTTP request pipeline.

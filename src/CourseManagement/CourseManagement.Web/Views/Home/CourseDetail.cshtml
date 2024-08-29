@@ -1,2 +1,104 @@
 ﻿@model CourseVM
-<h1>@Model.Name</h1>
+<body>
+    <div class="container">
+
+        <div class="course-header">
+            <div class="course-header-content" style="max-width: 800px; margin: 0 auto; text-align: center;">
+                <img src="data:image/png;base64,@Convert.ToBase64String(@Model.Image)" alt="Course Image" style="width: 100px; height: auto; margin-bottom: 20px;">
+                <h1 style="font-size: 3em;">@Model.Name</h1>
+                <p style="font-size: 1.25em; margin-bottom: 30px;">@Model.Description</p>
+                <a  asp-controller="Course" asp-action="EnrollCourse" asp-route-CourseID = "@Model.Id" class="btn btn-primary btn-lg">
+                    <i class="bi bi-check-circle"></i> Enroll Now
+                </a>
+            </div>
+        </div>
+
+        <div class="course-topics">
+            <h2>Course Outline</h2>
+            @if(@Model.CourseTopics.Count == 0){
+                <h1>Course Outline Is Not Published Yet</h1>
+            }
+            <ul>
+                @foreach (var topic in Model.CourseTopics)
+                {
+                    <li>
+                        <h3>@topic.TopicName</h3>
+
+                        @if (topic.TopicDetails != null)
+                        {
+                            @foreach(var topicdetail in topic.TopicDetails)
+                            {
+                                <div class="topic-detail">
+                                    
+                                    <strong>@topicdetail.TopicName</strong>
+                                </div>
+                            }
+                        }
+                    </li>
+                }
+            </ul>
+        </div>
+    </div>
+</body>
+
+<style>
+    .container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    .course-topics ul {
+        list-style-type: none;
+        padding: 0;
+    }
+
+    .course-topics li {
+        margin-bottom: 20px;
+        padding: 15px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+    }
+
+    .topic-detail {
+        margin-top: 10px;
+        background-color: #f9f9f9;
+        padding: 10px;
+        border-left: 4px solid #007bff;
+    }
+
+    .course-header {
+        background-size: cover;
+        background-position: center;
+        padding: 60px 20px;
+        border-radius: 10px;
+        color: black;
+        text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.5);
+    }
+
+    .course-header-content {
+        max-width: 800px;
+        margin: 0 auto;
+        text-align: center;
+    }
+
+    .course-header img {
+        width: 100px;
+        height: auto;
+        margin-bottom: 20px;
+    }
+
+    .course-header h1 {
+        font-size: 3em;
+    }
+
+    .course-header p {
+        font-size: 1.25em;
+        margin-bottom: 30px;
+    }
+
+    .course-header .btn {
+        padding: 10px 30px;
+    }
+
+</style>

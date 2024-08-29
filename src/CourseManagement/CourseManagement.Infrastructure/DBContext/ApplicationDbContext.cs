@@ -39,7 +39,7 @@ namespace CourseManagement.Infrastructure.DBContext
                         RoleId = new Guid("64347f96-85a1-4326-95f9-8291f9b64611")
                     }
             );
-
+            builder.Entity<CourseEnrollment>().HasKey(x => new { x.CourseID, x.StudentID });
             builder.Entity<Course>().HasOne(x => x.Teacher).WithMany(x => x.Courses).HasForeignKey(x => x.TeacherId).OnDelete(DeleteBehavior.NoAction);
             builder.Entity<CourseTopic>().HasOne(x => x.Course).WithMany(x =>x.CourseTopics).HasForeignKey(x => x.CourseID).OnDelete(DeleteBehavior.Cascade);
             builder.Entity<CourseTopicDetail>().HasOne(x => x.CourseTopic).WithMany(x => x.TopicDetails).HasForeignKey(x => x.TopicId).OnDelete(DeleteBehavior.Cascade);
@@ -63,6 +63,7 @@ namespace CourseManagement.Infrastructure.DBContext
         }
         public DbSet<Course>Course { get; set; }
         public DbSet<User> User { get; set; }
+        public DbSet<CourseEnrollment> CourseEnrollment { get; set; }
 
     }
 }

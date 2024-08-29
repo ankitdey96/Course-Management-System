@@ -3,7 +3,7 @@ using System.Linq.Expressions;
 
 namespace CourseManagement.Domain.Repositories
 {
-    public interface IGenericRepository<TEntity,Tkey> where TEntity : class,IEntity<Tkey> where Tkey:IComparable
+    public interface IGenericRepository<TEntity,Tkey> where TEntity : class where Tkey:struct
     {
         Task AddAsync(TEntity entity);
 
@@ -16,7 +16,7 @@ namespace CourseManagement.Domain.Repositories
             List<string> includes = null,
              Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null);
 
-        Task<TEntity> GetByIdAsync(Tkey id, List<string> includes = null);
+        Task<TEntity> GetByIdAsync(Expression<Func<TEntity, bool>> filter, List<string> includes = null);
 
         Task<bool> IsDuplicate(Expression<Func<TEntity, bool>> filter = null);
 

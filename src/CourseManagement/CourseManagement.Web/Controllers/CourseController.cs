@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CourseManagement.Web.Controllers
 {
-    [Authorize(Roles ="Admin,Teacher")]
+    [Authorize()]
     public class CourseController : Controller
     {
         private readonly IServiceScopeFactory _scopeFactory;
@@ -202,6 +202,24 @@ namespace CourseManagement.Web.Controllers
             return View(oCourseTopicVMs);
         }
 
+        [Authorize(Roles = "Student")]
+        public async Task<IActionResult> EnrollCourse(Guid CourseID)
+        {
+            try
+            {
+                var oCourseEnrollMentVM = Activator.CreateInstance<CourseEnrollMentVM>();
+                Guid UserId = Guid.Parse(_userManager.GetUserId(User));
+                oCourseEnrollMentVM.Resolve(_scopeFactory);
+                await oCourseEnrollMentVM.EnrollCourse(CourseID, UserId);
+                TempData["success"] = "Enrolled Successfully";
+            }
+            catch (Exception ex)
+            {
+                TempData["error"] = ex.Message;
+                _logger.LogError(ex.Message);
+            }
 
+            return RedirectToAction("Index", "Home");
+        }
     }
 }

@@ -17,6 +17,7 @@ namespace CourseManagement.Web.Models
         public Guid TeacherId { get; set; }
         public int NoOfClasses { get; set; }
         public decimal Fees { get; set; }
+        public List<CourseTopic> CourseTopics { get; set; }
 
         public int PageNo {  get; set; }
         public List<SelectListItem>? TeacherList { get; set; }

@@ -62,7 +62,7 @@ namespace CourseManagement.Application.Services
         public async Task<Course> GetCourseByID(Guid id)
         {
             List<string> include = new List<string>() { "Teacher", "CourseTopics", "CourseTopics.TopicDetails" };
-            return await _unitOfWork.CourseRepository.GetByIdAsync(id,include);
+            return await _unitOfWork.CourseRepository.GetByIdAsync(x => x.Id == id,include);
         }
 
         public async Task<IList<Course>> GetPagedCourseAsync(int pageNo, int pageSize = 10, Func<IQueryable<Course>, IOrderedQueryable<Course>> orderBy = null)

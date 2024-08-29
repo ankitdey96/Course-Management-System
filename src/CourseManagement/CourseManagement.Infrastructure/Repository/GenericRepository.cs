@@ -9,9 +9,8 @@ using Microsoft.EntityFrameworkCore.Query;
 namespace CourseManagement.Infrastructure.Repository
 {
     public class GenericRepository<TEntity, TKey> : IGenericRepository<TEntity, TKey>
-        where TEntity : class,
-        IEntity<TKey>
-        where TKey : IComparable
+        where TEntity : class
+        where TKey : struct
     {
         private readonly DbSet<TEntity> dbSet;
         private readonly ApplicationDbContext  _dbcontext;
@@ -62,9 +61,12 @@ namespace CourseManagement.Infrastructure.Repository
             return await query.ToListAsync();
         }
 
-        public async Task<TEntity> GetByIdAsync(TKey id, List<string> includes = null)
+        public async Task<TEntity> GetByIdAsync(Expression<Func<TEntity, bool>> filter, List<string> includes = null)
         {
             IQueryable<TEntity> query = dbSet;
+
+            if (filter is not null)
+                query = query.Where(filter);
 
             if (includes is not null)
             {
@@ -73,9 +75,7 @@ namespace CourseManagement.Infrastructure.Repository
                     query = query.Include(include);
                 }
             }
-
-            TEntity entity = await query.FirstOrDefaultAsync(e => e.Id.Equals(id));
-            return entity;
+            return await query.FirstOrDefaultAsync();
         }
 
         public async Task<IList<TEntity>> GetPaginateList(int pageNo = 1, int pageSize = 10,

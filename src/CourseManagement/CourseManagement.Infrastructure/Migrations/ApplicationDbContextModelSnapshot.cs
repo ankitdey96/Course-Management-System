@@ -56,6 +56,22 @@ namespace CourseManagement.Infrastructure.Migrations
                     b.ToTable("Course");
                 });
 
+            modelBuilder.Entity("CourseManagement.Domain.Entities.CourseEnrollment", b =>
+                {
+                    b.Property<Guid>("CourseID")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("StudentID")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("EnrollmentDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("CourseID", "StudentID");
+
+                    b.ToTable("CourseEnrollment");
+                });
+
             modelBuilder.Entity("CourseManagement.Domain.Entities.CourseTopic", b =>
                 {
                     b.Property<Guid>("Id")
@@ -253,14 +269,14 @@ namespace CourseManagement.Infrastructure.Migrations
                         {
                             Id = new Guid("abc5d607-8ccc-46ef-b56c-c0e8fff6cc8e"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "ec6dc46c-47bc-4f4c-b874-14ac5c36bf99",
+                            ConcurrencyStamp = "d12a7f14-327e-4b43-a760-22514f25299e",
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "admin@gmail.com",
                             EmailConfirmed = false,
                             FirstName = "Admin",
                             LastName = "",
                             LockoutEnabled = false,
-                            PasswordHash = "AQAAAAIAAYagAAAAEDxpCJ11cMQ8Qxcd9v37bL5NlMXtO6GGWOqH9/bLBCGXHxDCz2ACEttgBBwTRXGwFg==",
+                            PasswordHash = "AQAAAAIAAYagAAAAELEZ1rHSgJ40A2i+cz1gsj1x4x1xY8W9H86I+cyBebeD4g3ivD95jSzSzOSJvOK0NA==",
                             PhoneNumberConfirmed = false,
                             TwoFactorEnabled = false
                         });
