@@ -1,5 +1,6 @@
 ﻿using CourseManagement.Domain.Repositories;
 using CourseManagement.Infrastructure.DBContext;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,6 +17,7 @@ namespace CourseManagement.Infrastructure.Repository
         public ICourseTopicRepository CourseTopicRepository { get; private set; }
 
         public ICourseEnrollmentRepository CourseEnrollmentRepository { get; private set; }
+        public IDapperUtility DapperUtility { get; private set; }
 
         public UnitOfWork(ApplicationDbContext dbContext)
         {
@@ -24,6 +26,7 @@ namespace CourseManagement.Infrastructure.Repository
             UserRepository = new UserRepository(dbContext);
             CourseTopicRepository = new CourseTopicRepository(dbContext);
             CourseEnrollmentRepository = new CourseEnrollmentRepository(dbContext);
+            DapperUtility = new DapperUtility(dbContext.Database.GetDbConnection());
         }
 
 

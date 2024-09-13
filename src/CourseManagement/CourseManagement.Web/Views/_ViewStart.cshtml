@@ -1,11 +1,15 @@
-﻿@if (User.IsInRole("Admin"))
-{
-    Layout = "_LayoutAdmin";
-}
-@if (User.IsInRole("Teacher"))
-{
-    Layout = "_LayoutTeacher";
-}
-else{
-    Layout = "_Layout";
+﻿@{
+    if (User.IsInRole("Admin"))
+    {
+        Layout = "_LayoutAdmin";
+    }
+    else if (User.IsInRole("Teacher"))
+    {
+        Layout = "_LayoutTeacher";
+    }
+    else
+    {
+        Layout = "_Layout";
+    }
+    
 }

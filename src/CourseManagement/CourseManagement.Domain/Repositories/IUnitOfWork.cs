@@ -12,6 +12,8 @@ namespace CourseManagement.Domain.Repositories
         public IUserRepository UserRepository { get; }
         public ICourseTopicRepository CourseTopicRepository { get; }
         public ICourseEnrollmentRepository CourseEnrollmentRepository { get; }
+        public IDapperUtility DapperUtility { get; }
+
         Task SaveAsync();
 
         ValueTask DisposeAsync();

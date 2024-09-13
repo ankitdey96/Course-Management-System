@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using CourseManagement.Application.DTOs;
 using CourseManagement.Domain.Entities;
 using CourseManagement.Infrastructure.Membership;
 using CourseManagement.Web.Models;
@@ -11,6 +12,7 @@ namespace CourseManagement.Web
         public AutoMapperProfile()
         {
             CreateMap<CourseVM, Course>().ReverseMap();
+            CreateMap<CourseEnrollMentVM, CourseEnrollmentDto>().ReverseMap();
 
             CreateMap<ApplicationUser, AccountVM>()
                 .ForMember(dest => dest.FirstName, opt => opt.MapFrom(src => src.FirstName)) // Assuming IdentityUser has FirstName property
