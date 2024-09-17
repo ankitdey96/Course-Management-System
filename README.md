@@ -1,21 +1,26 @@
-Course management System.
+# Course Management System
 
-Web application with MVC for Managing Course Create,Authorization, Course Enrollment.
+A web application built using MVC architecture for managing course creation, authorization, and course enrollment.
 
-Technologies
-.NET 8
-ASP.NET Core MVC
-Entity Framework Core
-MS SQL
-JQuery
-AG-Grid
-Dapper
-AutoMapper
-Serilog
+## Technologies Used
 
-Features
-Main library with all books added by users
-Searching for books
-Viewing books details
-Creating and managing your own libraries *
-Adding and managing books, book series, authors, publishers and categories *
+- .NET 8
+- ASP.NET Core MVC
+- Entity Framework Core
+- MS SQL
+- jQuery
+- AG-Grid
+- Dapper
+- AutoMapper
+- Serilog
+
+## Features
+
+- Manage courses: create, update, delete
+- Authorization for course management
+- Course enrollment functionality
+- Main library with all books added by users
+- Search functionality for books
+- View detailed information for each book
+- Create and manage personal libraries
+- Add and manage books, book series, authors, publishers, and categories
