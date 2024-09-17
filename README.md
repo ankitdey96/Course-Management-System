@@ -6,6 +6,7 @@ A web application built using MVC architecture for managing course creation, aut
 
 - .NET 8
 - ASP.NET Core MVC
+- Clean Architecture
 - Entity Framework Core
 - MS SQL
 - jQuery
@@ -19,8 +20,8 @@ A web application built using MVC architecture for managing course creation, aut
 - Manage courses: create, update, delete
 - Authorization for course management
 - Course enrollment functionality
-- Main library with all books added by users
+- Course Topic Adding Functionality
 - Search functionality for books
-- View detailed information for each book
-- Create and manage personal libraries
-- Add and manage books, book series, authors, publishers, and categories
+- View Detail Info About All Course
+- Manage Role Of Admin,Teacher,Student
+- Role Based UI For Student,Teacher,Admin
