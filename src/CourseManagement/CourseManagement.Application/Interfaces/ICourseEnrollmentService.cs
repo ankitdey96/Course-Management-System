@@ -10,6 +10,6 @@ namespace CourseManagement.Application.Interfaces
     public interface ICourseEnrollmentService
     {
         Task EnrollCourse(Guid courseID, Guid studentID);
-        Task<(IEnumerable<CourseEnrollmentDto> TotalEnrollments, int TotalEnrollment, int TotalDisplay)> GetCourseEnrollment();
+        Task<(IEnumerable<CourseEnrollmentDto> TotalEnrollments, int TotalEnrollment, int TotalCourses)> GetCourseEnrollment();
     }
 }

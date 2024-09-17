@@ -1,5 +1,7 @@
 ﻿@model List<CourseEnrollMentVM>
-
+@{
+    var oCourseEnrollmentVM = Model.FirstOrDefault();
+}
     <div class="container-fluid">
         <div class="row">
 
@@ -13,20 +15,40 @@
                 <div class="row mb-4">
                     <div class="col-md-4">
                         <div class="stat-box">
-                            <h3>1,234</h3>
+                        @if(oCourseEnrollmentVM != null)
+                        {
+                           <h3>@oCourseEnrollmentVM.TotalEnrollment</h3> 
+                        }
+                        else{
+                            <h3>0</h3>
+                        }
                             <p>Total Enrollments</p>
                         </div>
                     </div>
                     <div class="col-md-4">
                         <div class="stat-box">
-                            <h3>56</h3>
-                            <p>Active Courses</p>
+                        @if (oCourseEnrollmentVM != null)
+                        {
+                            <h3>@oCourseEnrollmentVM.TotalCourses</h3>
+                        }
+                        else
+                        {
+                            <h3>0</h3>
+                        }
+                        <p>Active Courses</p>
                         </div>
                     </div>
                     <div class="col-md-4">
                         <div class="stat-box">
-                            <h3>789</h3>
-                            <p>Students</p>
+                        @if (oCourseEnrollmentVM != null)
+                        {
+                            <h3>@oCourseEnrollmentVM.TotalEnrollment</h3>
+                        }
+                        else
+                        {
+                            <h3>0</h3>
+                        }
+                        <p>Students</p>
                         </div>
                     </div>
                 </div>
@@ -69,8 +91,7 @@
                         Quick Actions
                     </div>
                     <div class="dashboard-card-body">
-                        <button class="btn btn-success me-2">Add New Course</button>
-                        <button class="btn btn-danger">Generate Report</button>
+                        <a asp-controller="Course" asp-action="ViewCourses" class="btn btn-success me-2">Add New Course</a>
                     </div>
                 </div>
             </main>

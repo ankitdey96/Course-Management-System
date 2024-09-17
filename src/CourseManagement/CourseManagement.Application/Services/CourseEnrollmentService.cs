@@ -34,7 +34,7 @@ namespace CourseManagement.Application.Services
             await _unitOfWork.SaveAsync();
         }
 
-        public async Task<(IEnumerable<CourseEnrollmentDto> TotalEnrollments, int TotalEnrollment, int TotalDisplay)> GetCourseEnrollment()
+        public async Task<(IEnumerable<CourseEnrollmentDto> TotalEnrollments, int TotalEnrollment, int TotalCourses)> GetCourseEnrollment()
         {
             IDictionary<string, object> InputPerameters = new Dictionary<string, object>
             {
@@ -48,11 +48,11 @@ namespace CourseManagement.Application.Services
             IDictionary<string, Type> OutParameters = new Dictionary<string, Type>
             {
                     { "TotalEnrollment",  typeof(int)},
-                    { "TotalDisplay",  typeof(int) }
+                    { "TotalCourses",  typeof(int) }
             };
             var data = await _unitOfWork.DapperUtility.ExecuteStoredProcedure<CourseEnrollmentDto>
                 ("GetCourseEnrollments",InputPerameters,OutParameters);
-            return (data.result, (int)data.outValues["TotalEnrollment"], (int)data.outValues["TotalDisplay"]);
+            return (data.result, (int)data.outValues["TotalEnrollment"], (int)data.outValues["TotalCourses"]);
         }
     }
 }

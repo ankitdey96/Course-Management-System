@@ -17,7 +17,7 @@ namespace CourseManagement.Web.Models
         public string CourseName {  get; set; }
         public string StudentName {  get; set; }
         public int TotalEnrollment {  get; set; }
-        public int TotalDisplay {  get; set; }
+        public int TotalCourses {  get; set; }
         public CourseEnrollMentVM()
         {
 
@@ -50,6 +50,9 @@ namespace CourseManagement.Web.Models
             {
                 CourseEnrollMentVM oCourseEnrollmentVM = new CourseEnrollMentVM();
                 _mapper.Map(oItem, oCourseEnrollmentVM);
+                oCourseEnrollmentVM.TotalEnrollment = data.TotalEnrollment;
+                oCourseEnrollmentVM.TotalCourses = data.TotalCourses;
+
                 courseEnrollMentVMs.Add(oCourseEnrollmentVM);
 
             }
