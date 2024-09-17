@@ -9,7 +9,7 @@ A web application built using MVC architecture for managing course creation, aut
 - Clean Architecture
 - Entity Framework Core
 - MS SQL
-- jQuery
+- JQuery
 - AG-Grid
 - Dapper
 - AutoMapper
