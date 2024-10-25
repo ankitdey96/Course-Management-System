@@ -21,7 +21,6 @@ A web application built using MVC architecture for managing course creation, aut
 - Authorization for course management
 - Course enrollment functionality
 - Course Topic Adding Functionality
-- Search functionality for books
 - View Detail Info About All Course
 - Manage Role Of Admin,Teacher,Student
 - Role Based UI For Student,Teacher,Admin
